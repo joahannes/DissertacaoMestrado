@@ -1,6 +1,6 @@
 # Dissertacao de Mestrado
 
-### Dados:
+## Dados:
 
 * Instituição: Universidade Federal do Pará
 * Instituto: Instituto de Ciências Exatas e Naturais
@@ -9,15 +9,15 @@
 * Autor: Joahannes Bruno Dias da Costa
 * Ano: 2018
 
-### Instalação:
+## Instalação:
 
 > git clone https://github.com/joahannes/DissertacaoMestrado.git 
 
-### Lista de Abreviaturas:
+## Lista de Abreviaturas:
 
-## Teste
+### Via Software
 
-Para criar a lista de abreviaturas seguindo o padrão em ordem alfabética, basta fazer a seguinte configuração no seu editor LaTeX:
+Para criar a lista de abreviaturas seguindo o padrão em ordem alfabética e utilizando uma ferramenta de edição, basta fazer a seguinte configuração no seu editor LaTeX:
 
 1. Adicionar "Comando do usuario":
 
@@ -28,3 +28,27 @@ Para criar a lista de abreviaturas seguindo o padrão em ordem alfabética, bast
 > ALT + SHIFT + F1
 
 Obs: Esse comando é válido no TexStudio.
+
+### Via Terminal
+
+Para criar a lista de abreviaturas em ordem alfabética via terminal, basta executar o arquivo Makefile (que está dentro do diretório 1_principal/) usando os seguintes passos:
+
+> make
+
+> make index
+
+> make clean
+
+> make
+
+Obs:
+
+Para a lista de abreviaturas funcionar, você deve adicionar a abreviatura e descrição dela durante a escrita do seu documento, por exemplo: Para adicionar a abreviatura VANETs na lista, na primeira vez que aparecer VANETs no texto basta adicionar:
+
+> \nomenclature{\textbf{VANETs}}{\textit{Vehicular Ad hoc Networks}}
+
+Veja o exemplo no parágrafo:
+
+Este capítulo introduz os conceitos sobre Redes Veiculares Ad hoc (\textit{Vehicular Ad hoc Networks} - VANETs\nomenclature{\textbf{VANETs}}{\textit{Vehicular Ad hoc Networks}}) por meio de uma visão geral sobre o tema. Levanta a discussão acerca da motivação para elaboração deste trabalho, ilustrando os principais desafios existentes para a construção de propostas a nível de disseminação de dados eficiente. Apresenta os objetivos que envolvem o trabalho, além de sumarizar as contribuições essenciais do mesmo. Por fim, apresenta o conteúdo dos próximos capítulos.
+
+Feito. :)
