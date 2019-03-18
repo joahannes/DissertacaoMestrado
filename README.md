@@ -15,12 +15,14 @@
 
 ### Lista de Abreviaturas:
 
-Para criar a lista de abreviaturas seguindo o padrão em ordem alfabética, basta executar o Makefile presente no projeto, seguindo os passos:
+Para criar a lista de abreviaturas seguindo o padrão em ordem alfabética, basta fazer a seguinte configuração no seu editor LaTeX:
 
-> make
+1. Adicionar "Comando do usuario":
 
-> make index
+> makeindex -s nomencl.ist -t %.nlg -o %.nls %.nlo
 
-> make clean
+2. Compilar primeiro "comando do usuario" e depois a compilação normal:
 
-> make
+> ALT + SHIFT + F1
+
+Obs: Esse comando é válido no TexStudio.
