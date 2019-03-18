@@ -13,11 +13,14 @@
 
 > git clone https://github.com/joahannes/DissertacaoMestrado.git 
 
-### Lista de Abreviaturas
+### Lista de Abreviaturas:
 
 Para criar a lista de abreviaturas seguindo o padrão em ordem alfabética, basta executar o Makefile presente no projeto, seguindo os passos:
 
 > make
+
 > make index
+
 > make clean
+
 > make
