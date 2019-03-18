@@ -13,7 +13,7 @@ LATEXMK=latexmk
 LATEXMKOPT=-pdf -bibtex -quiet
 
 # index
-NAME="ic-tese-v3"
+NAME="mestrado_joahannes"
 
 # rules
 all:
