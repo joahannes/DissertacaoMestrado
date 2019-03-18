@@ -1,0 +1,182 @@
+%****************************************************************************
+%*  Copyright (c) Federal University of Para, brazil - 2011                 *
+%*  Developed at the Research Group on Computer Network and Multimedia      *
+%*  Communication (GERCOM)													*
+%*  All rights reserved                                                     *
+%*                                                                          *
+%*  Permission to use, copy, modify, and distribute this protocol and its   *
+%*  documentation for any purpose, without fee, and without written         *
+%*  agreement is hereby granted, provided that the above copyright notice,  *
+%*  and the author appear in all copies of this protocol.                   *
+%*                                                                          *
+%*  Author(s): Denis do Rosário <denis@gmail.com>                           *
+%*             Andre Riker <andre.riker@gmail.com>                          *
+%****************************************************************************/
+\documentclass[ruledheader]{abnt}
+
+% Permite utilizar configuracoes da linguagem portugesa do Brasil e Inglesa
+\usepackage[brazil]{babel}
+% Permite especificar codificacao das entradas (caracteres acentuados - á - sem usar \'a)
+\usepackage[latin1]{inputenc} %para windows
+%\usepackage[utf8]{inputenc}   %para linux
+\usepackage{ufpa}
+\usepackage[pdftex]{graphicx}
+
+\usepackage[breaklinks=true]{hyperref} %Link no sumário
+
+\usepackage{pdfpages}
+
+\usepackage{latexsym}
+\usepackage{psfrag}
+\usepackage{amsmath, amsfonts, amssymb} % Fonte e símbolos matemáticos
+\usepackage{fancyvrb}
+
+%Para comentário em múltiplas linhas
+\usepackage{verbatim}
+
+%Para subfiguras
+\usepackage{subfigure}
+
+%\usepackage{indentfirst}% Indenta o primeiro parágrafo de cada seção.
+\usepackage{lipsum}% Usar a simulação de texto Lorem Ipsum
+
+%Para orientação paisagem na página
+\usepackage{lscape}
+
+%Checkmarks
+\usepackage{pifont}
+\usepackage{amssymb}
+
+%Para uso de algoritmos
+\usepackage[portuguese, ruled, linesnumbered, vlined]{algorithm2e} 
+\usepackage{mathtools}
+
+%Lista de nomenclaturas
+\usepackage{nomencl}
+\makenomenclature
+
+\usepackage{xcolor}
+\fboxsep=0mm %espessura do preenchimento
+\fboxrule=0.0pt %espessura da borda
+
+\usepackage[Conny]{fncychap} %*Sonny Conny *Lenny Renje Glenn Bjarne *Bjornstrup
+\ChTitleAsIs
+
+\makeatletter
+
+%Para definir a existencia e cores dos links internos do documento
+\hypersetup{
+	colorlinks=true,	% false: boxed links; true: colored links
+	linkcolor=black,	% color of internal links
+	citecolor=black,	% color of links to bibliography
+	filecolor=black,	% color of file links	
+	urlcolor=blue		% color of external links
+}
+
+\makeatother
+%---
+
+\newcommand{\eg}{\textit{e.g.}}
+\newcommand{\ie}{\textit{i.e.}}
+
+\begin{document}
+
+\instituicao{Universidade Federal do Pará}
+\centro{Instituto de Ciências Exatas e Naturais}
+\curso{Programa de Pós-Graduação em Ciência da Computação}
+\autor{Joahannes Bruno Dias da Costa}
+\autorr{Costa, Joahannes Bruno Dias da}
+\titulo{Disseminação de Dados baseada em métricas de Redes Complexas para Sistemas de Transporte Inteligentes}
+\orientador{Eduardo Coelho Cerqueira}
+\coorientador{Denis Lima do Rosário} %comentar senão tiver co-orientador
+
+\comentario{Dissertação apresentada ao Programa de Pós-Graduação em Ciência da Computação da Universidade Federal do Pará, como parte dos requisitos para obtenção do título de Mestre em Ciência da Computação.}
+
+% Membros da comissão avaliadora
+\bancaum{Prof. Dr. \ABNTorientadordata \\ (PPGCC/UFPA - Orientador)}
+\bancadois{Prof. Dr. \ABNTcoorientadordata \\ (PPGCC/UFPA - Coorientador)}
+\bancatres{Prof. Dr. Marcos César da Rocha Seruffo \\ (ITEC/UFPA - Membro Externo)}
+\bancaquatro{Pesq. Dr. Billy Anderson Pinheiro \\ (UFPA - Membro Externo)}
+\bancacinco{Prof. Dr. Leandro Aparecido Villas \\ (UNICAMP - Membro Externo)}
+
+% Epigrafe
+\epigrafe{``Em planejamento, nunca uma proposição inútil; Em estratégia, nenhum passo dado em vão."}
+\autorepigrafe{Sun Tzu}
+
+% Local e ano
+\local{Belém - PA}
+\data{2018}
+
+% Palavras chave
+\pcs{Sistemas de Transporte Inteligentes}{Disseminação de Dados}{Grafos}
+\kws{Intelligente Transportation Systems}{Data Dissemination}{Graphs}
+
+% Para legenda nas figuras
+\fonte{Elaborado pelo autor}
+
+% Essas informacoes do codigo CIP você consegue indo na biblioteca central
+\codigocipum{C837d}
+\codigocipdois{CDD 004.65}
+
+% Para acrescentar comentarios ao PDF descomente (METADADOS):
+\hypersetup{
+	pdfsubject={Dissertação de Mestrado - UFPA - 2018},   % subject of the document
+	pdfauthor={\ABNTautordata},
+	pdftitle={\ABNTtitulodata},
+	pdfkeywords={\ABNTpcumdata, \ABNTpcdoisdata\ e \ABNTpctresdata},
+	pdfproducer={LaTeX with hyperref},
+	pdfcreator={\ABNTautordata},
+	pdfnewwindow=true,	% links in new window
+}
+
+\input{../2_pre_texto/capa}
+\setcounter{page}{1} % inicia a contagem do numero das paginas
+\pagenumbering{arabic}
+\input{../2_pre_texto/folhaderosto}
+\input{../2_pre_texto/fichacatalografica}
+%\input{../2_pre_texto/folhaaprovacao}
+\includepdf[pages=-]{fichanova.pdf}
+\input{../2_pre_texto/dedicatoria}
+\input{../2_pre_texto/agradecimentos}
+\input{../2_pre_texto/epigrafe}
+\input{../2_pre_texto/resumo}
+\input{../2_pre_texto/abstract}
+\input{../2_pre_texto/sumario}
+\input{../2_pre_texto/sigla}
+\input{../2_pre_texto/simbolos}
+\input{../2_pre_texto/figuras}
+\input{../2_pre_texto/tabelas}
+
+%\setcounter{page}{0} % Reinicia a contagem do numero das paginas
+%\pagenumbering{arabic} % Numeracao dos capitulos arabica
+
+% ************* TEXTO *************
+% A parte textual deve conter:
+% 1 - Introdução
+% 2 - Revisão de Literatura
+% 3 - Material e Métodos
+% 4 - Análise dos Resultados
+% 5 - Discussão
+% 6 - Conclusão
+
+%\setcounter{page}{0} % Reinicia a contagem do numero das paginas
+\input{../3_texto/introducao}
+\input{../3_texto/ref_teorico}
+\input{../3_texto/relacionados}
+\input{../3_texto/proposta}
+\input{../3_texto/avaliacao}
+\input{../3_texto/conclusao}
+
+\bibliographystyle{IEEEtran} %template de referencia do IEEE
+%\bibliographystyle{sbc} %template de referencia do SBC
+\bibliography{../4_pos_texto/biblio}
+
+% *********** APÊNDICES ***********
+% ** Condicionados à necessidade **
+%\input{../4_pos_texto/apendice}
+
+% ************ ANEXOS *************
+% ** Condicionados à necessidade **
+%\input{../4_pos_texto/anexo}
+
+\end{document}

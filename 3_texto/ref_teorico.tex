@@ -1,0 +1,172 @@
+\chapter{Referencial Teórico}
+\label{cha:refTeorico}
+Neste capítulo, serão apresentados os principais conceitos sobre Redes Veiculares, suas classificações e desafios enfrentados. Em seguida, entende-se como se dá a disseminação de dados em VANETs e como melhorias nesse sentido podem ser propostas. São citados os principais problemas enfrentados ao se disseminar dados em VANETs e como os autores propõem soluções para contorná-los. Por fim, o conceito de Redes Complexas é discutido, bem como algumas de suas métricas de avaliação e o quão importante uma avaliação nesse sentido se faz necessária em cenários que envolvem algum tipo de interação entre as partes e como essa interação pode ser modelada para extrair características importantes da rede. %Por fim, entende-se como se dá a Distribuição de Conteúdo em VANETs e como melhorias nesse sentido podem ser propostas.
+
+\section{Redes Veiculares Ad hoc (VANETs)}
+O desenvolvimento de novos serviços em prol do bem estar dos usuários vem aumentando nos últimos anos. Os dispositivos também seguem essa tendência e estão cada vez mais conectados à Internet e abrindo possibilidades para novas soluções e otimização das já existentes. Nesse contexto, os Sistemas de Transporte Inteligentes (\textit{Intelligent Transportation Systems} - ITS\nomenclature{\textbf{ITS}}{\textit{Intelligent Transportation Systems}}) surgem para oferecer soluções robustas que atendam aos clientes de serviços de transporte, sejam aéreos, terrestres ou aquáticos \cite{dimitra:2010}.
+
+Especificamente no que se refere ao transporte rodoviário, os ITSs para VANETs oferecem serviços com objetivo de alcançar maior segurança e mobilidade ao mesmo tempo que buscam reduzir os impactos ambientais causados pela utilização de veículos automotores. Existem serviços de semáforos inteligentes, serviços de pedágio, detecção de congestionamentos, serviços de alertas, dentre outros. Seus principais objetivos são: agilizar e gerenciar o tráfego de veículos, auxiliar os motoristas, garantir a segurança no trânsito e prover aplicações de interesse do usuário (tanto motoristas quanto passageiros) \cite{yokoyama:2014}.
+
+Dessa forma, as VANETs possibilitam os veículos: produzir e consumir uma grande quantidade de conteúdos, seguindo a propriedade de relevância local (tempo e espaço); buscar pelo conteúdo, independentemente de seus fornecedores; colaborar com a rede usando seus recursos para criação de serviços com ajuda mínima da infraestrutura de Internet \cite{lee:2014}.
+
+\subsection{Características}
+
+As redes \textit{ad hoc} trouxeram um diferencial significativo para as comunicações de curto alcance. A possibilidade de manter conexões com diversos nós sem a presença de uma infraestrutura para gerenciamento dessa rede, aumenta a gama de soluções que podem ser pensadas para os mais diversos cenários. Ou seja, um nó pertencente a uma rede \textit{ad hoc} possui interfaces sem fio que o permite trocar informações com outros nós, a rede tem autonomia para se autogerenciar.
+
+Assim, as VANETs herdam essas características e podem funcionar em, basicamente, três tipos de comunicação. A infraestruturada, V2I, tendo a presença de pontos de acesso e \textit{gateways} para fornecer acesso à Internet e roteamento para as transmissões. Os veículos se comunicam com essa infraestrutura para poder terem acesso ao serviço desejado, conforme ilustrado na Figura \ref{fig:v2i}. Esse tipo de comunicação tem um alto custo de implantação e manutenção \cite{cunha:2016}.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.50\textwidth]{../5_figuras/V2I.png}
+	\caption{Comunicação V2I}
+	\label{fig:v2i}
+	\medskip
+	Fonte: \ABNTfonte
+\end{figure}
+
+Outro tipo de comunicação é a \textit{ad hoc}, ou V2V, onde todos os nós se comunicam diretamente entre si e desempenham o papel de roteadores para encaminhamento do tráfego através de múltiplos saltos entre uma origem e um destino, sendo possível por meio de um dispositivo de rede instalado nos veículos chamado OBU\nomenclature{\textbf{OBU}}{\textit{On-Board Unit}} (\textit{On-Board Unit}) que se conecta à rede sem fio DSRC \cite{bai:2006}. A conectividade entre os nós depende da densidade da rede e de como os veículos estão se movimentando na via, o seu padrão de mobilidade. A Figura \ref{fig:v2v} ilustra a comunicação V2V.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.50\textwidth]{../5_figuras/V2V.png}
+	\caption{Comunicação V2V}
+	\label{fig:v2v}
+	\medskip
+	Fonte: \ABNTfonte
+\end{figure}
+
+Existe ainda a comunicação que faz uso das características vistas anteriormente, conhecida como Híbrida ou V2X. Agora, um nó pode tanto se comunicar com outro de forma \textit{ad hoc} e/ou se comunicar com uma infraestrutura para consumir determinado conteúdo e/ou serviço, como bem mostrado na Figura \ref{fig:v2x}. Esse tipo de comunicação é bastante explorada pelo fato de possibilitar a combinação de diferentes serviços, sempre buscando adequar as necessidades do usuário. Como por exemplo, em determinado instante da viagem os passageiros decidem assistir um vídeo da Internet e já em outro ponto da viagem uma mensagem de acidente na pista é propagada entre os veículos para evitar acidentes.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.50\textwidth]{../5_figuras/V2X.png}
+	\caption{Comunicação Híbrida ou V2X}
+	\label{fig:v2x}
+	\medskip
+	Fonte: \ABNTfonte
+\end{figure}
+
+O protocolo para disseminação de dados aqui proposto atua no cenário de comunicação veicular V2V, ou seja, opera de forma totalmente distribuída sem a necessidade de uma infraestrutura externa para seu funcionamento. Dessa forma, cada veículo terá autonomia para decidir quem participará da rede no momento da disseminação da mensagem de dados. Isso é importante pois não consumirá recursos da infraestrutura, deixando-a livre para provimento de outros serviços.
+
+\section{Disseminação de Dados}
+\label{sec:disseminacao}
+
+Diferentes arquiteturas de implantação para redes veiculares existem em ambientes rurais, urbanos ou em rodovias. Isso se torna possível através da rápida evolução que esse tipo de rede vem sofrendo e, também, as comunicações móveis de uma forma geral. As VANETs possuem características bem específicas como topologia altamente dinâmica, rede frequentemente desconectada, endereçamento geográfico e modelagem de mobilidade, por exemplo \cite{villas:2015}. 
+
+Dessa forma, algoritmos para disseminação de dados, ou distribuição de conteúdo, devem ser pensados levando em consideração essas características. Isso faz com que a distribuição de informações em VANETs de forma eficiente seja um grande desafio. Levar em consideração a mobilidade dos veículos, aspectos de comunicação e parâmetros de qualidade desse conteúdo que será distribuído na rede é um ponto crucial para aumento da satisfação dos usuários, ponto esse já vem sendo explorado pelos pesquisadores \cite{quadros:2016, oche:2017}.
+
+A maioria das aplicações em VANETs requerem algum protocolo de disseminação de dados eficiente, confiável e que realiza múltiplos saltos da fonte até o destino (\textit{multihop}). Isso torna esta tarefa uma das mais desafiadoras. Por exemplo, tanto a prevenção de colisões de veículos como o aviso pós-colisão requerem uma disseminação de dados eficiente e robusta, especificamente quando as distâncias entre o emissor e os receptores pretendidos são maiores do que a faixa de transmissão de rádio dos mesmos \cite{villas:2015}.
+
+A disseminação de dados em VANETs podem ser categorizadas em duas. A primeira é a disseminação de dados V2I, que necessita de alguma infraestrutura na estrada para que a propagação das informações seja possível, podendo ser uma abordagem \textit{push} ou \textit{pull}. Na abordagem \textit{push} a infraestrutura transmite dados para todos os veículos dentro de sua faixa de comunicação. Por outro lado, na abordagem \textit{pull} os veículos solicitam informações sobre dados específicos. Na outra categoria está a distribuição de dados V2V, onde os veículos se comunicação unicamente via \textit{ad hoc} \cite{chaqfeh2014survey}.
+
+A disseminação de dados por meio da inundação da rede, conhecida como \textit{Flooding}, é a abordagem mais simples para disseminar dados a partir de uma fonte para todos os veículos localizados dentro de uma Área de Interesse (\textit{Area of Interest} - AoI\nomenclature{\textbf{AoI}}{\textit{Area of Interest}}). Nessa abordagem, o veículo fonte inicia a transmissão da mensagem para todos os veículos no seu alcance, e cada veículo alcançado também repete esse processo. As retransmissões ocorrem sucessivamente até que a rede seja inundada com pela mensagem de dados.
+
+O \textit{Flooding} tem um bom desempenho em VANETs com baixa densidade. Porém, essa abordagem não trata do problema de \textit{broadcast storm}  \cite{akabane:2016} que causa sobrecarga na rede, esse problema é muito comum em cenários densos, devido as transmissões de mensagens redundantes ou múltiplas transmissões em um curto intervalo de tempo. Portanto, os protocolos de disseminação de dados em VANETs devem lidar com o problema de \textit{broadcast storm}, altas taxas de atraso na entrega das mensagens, baixa cobertura e colisões de pacotes na camada MAC \cite{cunha:2016}.
+
+Disseminar dados com base no conhecimento contextual além dos vizinhos de 1 salto provê uma seleção eficiente de nós encaminhadores. Especificamente, os dados podem ser encaminhados para o veículo identificado como um ponto comum de comunicação a partir de uma análise topológica, p.e., um nó que tenha um maior número de vizinhos. Nesse contexto, a rede pode ser representada através de um grafo, onde os veículos são considerados como vértices e os enlaces de comunicação entre eles como arestas. Com base nesse grafo é possível analisar o comportamento da rede a partir de métricas de redes complexas \cite{zhang2015topology, silva2017}.
+
+Redes complexas permitem modelar estruturas e aspectos do mundo real através de elementos e conexões entre os elementos para resolução de problemas específicos, ou seja, por meio de grafos \cite{newman2003structure}. Modelar as VANETs como grafos permite avaliar as interações entre veículos e como elas impactam na rede como um todo, podendo até identificar de comportamentos sociais existentes na VANET \cite{alvarenga2014, wang2017vehicular, vegni2015survey}. Assim, foca-se na comunicação V2V para distribuição de conteúdo pelo fato de estar mais próxima de uma implementação real, haja vista, o alto custo de implantação e manutenção de infraestruturas a fim de prover comunicação V2I para este fim.
+
+\subsection{Métricas de avaliação}
+
+No contexto de disseminação de dados em VANETs é importante definir quais métricas serão utilizadas nas avaliações dos protocolos propostos. Pesquisas colocam algumas métricas como importantes em avaliações desta natureza \cite{villas:2014, costa2017centrality, de2017fully, monteiro2017graph, akabane:2016}, sendo as métricas:
+
+\begin{itemize}
+	\item \textbf{Cobertura}: representa a porcentagem de mensagens disseminadas que são efetivamente entregue as veículos no interior da área de interesse. Assim, espera-se que os protocolos de disseminação alcancem taxas de cobertura o mais próximo possível de 100\%.
+	\item \textbf{Mensagens transmitidas}: número total de mensagens transmitidas por todos os veículos da rede no processo de disseminação de dados. Um elevado número de transmissões de mensagens é um forte indicativo de que as mensagens estão sendo disseminadas de forma indiscriminada, ou seja, redundante, o que resulta na sobrecarga da rede. Neste caso, quanto menos transmissões, mantendo uma alta taxa de cobertura, melhor para a rede.
+	\item \textbf{Atraso}: o atraso médio que leva para entrega as mensagens do veículo fonte para todos os outros veículos dentro da área de interesse. Baixas taxas de atraso são importantes para aplicações críticas que necessitam tomar decisões rapidamente, como aplicações de segurança ou gerenciamento de trânsito.
+	\item \textbf{Colisões}: o número médio de colisões de pacote na camada MAC para disseminar as mensagens de dados. Um elevado número de colisões indica que a seleção de reencaminhadores de um dado protocolo não está operando de forma eficiente e ocasiona altas taxas de perdas de pacotes e o problema de tempestade de transmissões.
+\end{itemize} 
+
+\section{Redes Complexas}
+
+Rede complexa é entendida como uma abstração que possibilita analisar os relacionamentos entre pares de objetos. Refere-se diretamente a um grafo dinâmico que apresenta propriedades específicas, que não são encontradas em grafos simples \cite{albert2003linked, figueiredo2011introduccao}. É um tema bastante explorado em diversas áreas do conhecimento quando se tem a necessidade de representação das relações entre os elementos na rede e qual impacto de tais relações. O estudo de redes na forma de grafos foi impulsionado após Leonhard Euler propor uma solução para o problema das pontes de Königsberg (1941), que originou a teoria dos grafos \cite{metz2007redes}. Em resumo, a rede é representada por um conjunto de vértices que têm suas relações estabelecidas através de arestas.
+
+Pesquisas que envolvem redes complexas buscam extrair conhecimento através do comportamento interativo entre os componentes da rede, como por exemplo a conectividade funcional do cérebro a partir do relacionamento entre neurônios \cite{avena2018communication}. Pelo fato de se utilizar grafos, a estrutura topológica das redes influenciam diretamente a funcionalidade e os processos que operam sobre a mesma \cite{figueiredo2011introduccao}. Como existem diversos tipos de redes, com características diferentes e ligações dos seus pares de vértices podendo ter muitos significados possíveis, as arestas estabelecem um determinado tipo de ligação entre dois vértices de acordo com o cenário estabelecido na análise.
+
+Para entender, a Figura \ref{fig:redecomplexa} exibe um exemplo da extração de características distintas a partir de uma mesma rede composta por 8 nós. Considerando os nós da rede sendo um grupo de pessoas e fazendo duas análises distintas, as Figuras \ref{fig:rede1} e \ref{fig:rede2} exibem as relações para contatos de amizade e contatos profissionais, respectivamente. Pode-se notar as diferenças para cada uma das análises. Algumas relações de amizade se mantém em relações de contato profissional (\ie\ 0-1, 2-3, 4-6 e 4-7), relações são desfeitas (\ie\ 0-5, 1-2, 1-3, 1-4, 4-5, 5-6) e novas relações surgem (\ie\ 6-7).
+
+\begin{figure}[!ht]
+	\centering
+	\subfigure[Relacionamentos de amizade.]{
+		\includegraphics[width=0.45\textwidth]{../5_figuras/rede1.png}
+		\label{fig:rede1}
+	}
+	\subfigure[Relacionamentos de contato profissional.]{
+		\includegraphics[width=0.45\textwidth]{../5_figuras/rede2.png}
+		\label{fig:rede2}
+	}
+	\caption{Características distintas extraídas de uma mesma rede}
+	\label{fig:redecomplexa}
+	\medskip
+	Fonte: \ABNTfonte
+\end{figure}
+
+Especificamente em redes complexas, existem algumas classificações dessas redes de acordo com suas características de ligação entre os nós \cite{newman2003structure, newman2010networks, boccaletti2006complex}.
+
+\begin{itemize}
+	\item \textbf{Rede Regular}: modelo que apresenta redes onde todos os nós possuem mesmo grau;
+	\item \textbf{Rede Aleatória}: demonstra as ligações que ocorrem entre os nós da rede de forma aleatória, onde todos os nós têm em média o mesmo número de ligações ou a mesma probabilidade de receber novas ligações. Dessa forma, a conectividade entre os nós obedece a uma distribuição de Poisson;
+	\item \textbf{Rede Livre de Escala}: defende que as redes não são formadas de maneira aleatória, onde existe uma ordem na dinâmica de estruturação das redes. Quanto mais ligações um nó possui, maior sua probabilidade para criação de novas ligações com nós que também seguem essa característica. São redes em que o número de nós dominantes é relativamente baixo.
+	\item \textbf{Rede Pequeno-mundo}: modelo que permite observar o comportamento de ligação entre nós que estão próximos uns dos outros, onde a distância entre esses nós não ultrapassa um número pequeno de nós. Redes sociais são exemplos de redes deste tipo, onde a probabilidade de ligação entre duas pessoas que têm um mesmo amigo em comum é elevada.
+\end{itemize}
+
+Outro ponto importante, que se refere ao comportamento da rede, é verificar quais nós são considerados os mais centrais. Essa avaliação pode ser utilizada para definir pontos que necessitam de um \textit{firewall} mais forte, no caso da rede de computadores, ou onde adicionar estrategicamente pontos de policiamento em grandes eventos, por exemplo. Sendo assim, os nós mais centrais são aqueles que a partir dos quais podem atingir qualquer outro nó com mais eficiência \cite{borba2013medidas}, no que se refere à centralidade de nó. Existe ainda a centralidade de aresta, que mostra qual ligação entre um par qualquer de nós na rede é considerada mais importante, como por exemplo as principais vias de congestionamento em uma cidade ou cabos de Internet que ligam uma rede de \textit{data centers} em diferentes regiões.
+
+Para quantificar a importância de um nó para a rede, existem cálculos matemáticos que se baseiam em determinadas características específicas na interação entre os nós e estrutura topológica, dadas em função de alguns invariantes da rede \cite{de2010medidas}. Tais cálculos são conhecidos como medidas ou métricas de centralidade. Espera-se, por exemplo, altos índices de centralidade no nó em uma rede que representa uma pessoa com alto cargo de chefia em uma empresa, uma página de Internet que recebe muitos visitantes ou um roteador que funciona como \textit{gateway} em um grande fluxo de dados \cite{borba2013medidas}.
+
+\subsection{Métricas de centralidade}
+
+Existem diversas métricas de centralidade para quantificação da influência ou importância que um nó exerce sobre a rede \cite{newman2010networks}. Dentre elas, as mais tradicionais são as métricas de centralidade de grau (\textit{Degree centrality}), intermediação (\textit{Betweenness centrality}) e aproximação ou proximidade (\textit{Closeness centrality}). Para este trabalho, foram consideradas as métricas de centralidade de grau e intermediação, assim, as mesmas serão descritas de forma mais detalhada a seguir.
+
+\subsubsection{Centralidade de Grau}
+
+Na avaliação da centralidade de grau o que recebe mais atenção é a quantidade de ligações que um nó possui. Ela é considerada como o primeiro passo dado para o estudo da influência que nós exercem sobre a rede. Está relacionada com o grau dos vértices do grafo. Ou seja, se for realizada uma observação a partir das interações em uma rede social, a maior quantidade de amigos que um indivíduo possui em relação a outro é o deve ser levado em consideração \cite{de2010medidas, newman2010networks}.
+
+Assim, a centralidade de grau se refere a contagem do número de ligações (arestas) incidentes à um nó qualquer, ou seja, é a mesmo que considerar o próprio grau desse nó. A Equação \ref{eq:grau} apresenta uma definição formal da centralidade de grau para grafos não ponderados, os quais são considerados neste trabalho \cite{opsahl2010node}.
+
+\begin{equation}
+\label{eq:grau}
+G(i) = \sum_{j=1}^{n} a_{ij}
+\end{equation}
+
+Onde, $i$ é o nó que se deseja encontrar sua centralidade de grau, $j$ representa todos os outros nós, $n$ é o número total de nós, e $a$ é a matriz de adjacência, na qual a célula $a_{ij}$ é definida como 1 se existir conexão com o nó $j$ e 0 caso contrário.
+
+A Figura \ref{fig:grau} exibe uma rede composta por 8 nós onde será verificada a centralidade de grau. Como pode ser observado, o nó 1 possui 4 ligações com outros vértices (0, 2, 3 e 4), ou seja, o grau desse nó é igual a 4 e, consequentemente, seu índice de centralidade de grau também é igual a 4. Levando em consideração essa análise, os nós que são considerados mais centrais são os nós 1 e 4, pois ambos possuem o índice de centralidade de grau igual a 4.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.50\textwidth]{../5_figuras/rede1.png}
+	\caption{Exemplo de rede para verificação da centralidade de grau}
+	\label{fig:grau}
+	\medskip
+	Fonte: \ABNTfonte
+\end{figure}
+
+\subsubsection{Centralidade de Intermediação}
+
+A métrica de centralidade de intermediação está relacionada com a quantidade de caminhos mínimos que são intermediados por um nó na rede \cite{jamour2017parallel}. O nó mais central aqui é o que faz parte do maior número de caminhos mínimos. É importante citar que pontos de articulação farão parte de todos os caminhos mínimos entre nós de blocos diferentes, em função de sua posição topológica na rede \cite{borba2013medidas}. A Equação \ref{eq:intermediacao} formaliza a definição para encontro do índice de intermediação, também em grafos não ponderados.
+
+\begin{equation}
+B(i) = \sum_{s\neq t \neq i \in V}{\frac{ \sigma_{st}(i) }{ \sigma_{st} }}
+\label{eq:intermediacao}
+\end{equation}
+
+Onde, $s$, $t$ e $i$ são nós pertencentes ao conjunto de nós $V$, $\sigma_{st}$ é o número de caminhos mínimos do nó $s$ para o nó $t$, e $\sigma_{st}(i)$ é o número de caminhos mínimos de $s$ para $t$ que passam pelo nó $i$.
+
+De acordo com exemplo exibido na Figura \ref{fig:inter}, a quantidade de caminhos mínimos entre os nós 5 e 1 é igual a 2 ($\sigma_{51} = 2$), a quantidade de caminhos mínimos entre 5 e 1 que passam apenas pelo nó 0 é igual a 1 ($\sigma_{51}(0) = 1$), assim o cálculo de centralidade de intermediação para o nó 0 considerando também $\sigma_{52}(0)$ é igual a $B(0) = \frac{\sigma_{51}(0)}{\sigma_{51}} + \frac{\sigma_{52}(0)}{\sigma_{52}} = \frac{1}{2} + \frac{1}{2} = 1$.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.50\textwidth]{../5_figuras/rede_inter.png}
+	\caption{Exemplo de rede para verificação da centralidade de intermediação}
+	\label{fig:inter}
+	\medskip
+	Fonte: \ABNTfonte
+\end{figure}
+
+Sendo assim, a motivação para a combinação de redes complexas e VANETs parte do pressuposto de que alguns trabalhos defendem que muitas redes \textit{ad hoc} possuem características tanto de Redes Livre de Escala quanto Redes de Pequeno-mundo \cite{kas2012if, monteiro2017graph}. Então, avaliações que consideram métricas de redes complexas em VANETs se fazem necessárias para compreender melhor a dinâmica de interação entre os nós desse tipo de rede e como isso pode ser utilizado para melhoria dos serviços por elas oferecidos.
+
+\section{Conclusões do capítulo}
+
+Neste capítulo, foram apresentadas as principais características acerca das VANETs, os quais incluem os tipos de comunicação que são suportados (V2I, V2V e V2X). Aspectos acerca da disseminação de dados em VANETs foram levantados, bem como os desafios enfrentados e quais métricas são avaliadas pelas soluções de disseminação que presentes na literatura. Além disso, foi apresentado o conceito de redes complexas, os tipos de modelos utilizadas para classificação nas análises que são realizadas nesse tipo de estudo e, principalmente, as métricas de centralidade utilizadas em redes complexas para quantificar o nível de importância que um nó exerce sobre a rede.

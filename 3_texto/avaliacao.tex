@@ -1,0 +1,207 @@
+\chapter{Avaliação de desempenho}
+\label{cha:avaliacao}
+
+Neste capítulo será descrito o processo de avaliação de desempenho do DDRX. Apresenta a metodologia de avaliação, bem como todos os parâmetros configurados para as simulações computacionais. Assim, foram utilizadas métricas de avaliação de desempenho para protocolos de disseminação, sendo descritas na Seção \ref{sec:disseminacao}. Além disso, é apresentado um estudo de caso em que o DDRX é avaliado como parte integrada a uma aplicação de ITS, tendo também, todo esse cenário descrito em detalhes. Por fim, serão apresentados os resultados obtidos em ambas análises.
+
+\section{Caso de uso I: Disseminação de Dados}
+Um primeiro caso de uso é montado para avaliar como o DDRX se comporta em relação a outros protocolos de disseminação de dados em VANETs. O cenário avaliado será um cenário urbano de 1 km\textsuperscript{2} do centro da cidade de Manhattan, Estados Unidos, conforme exibido na Figura \ref{fig:manhattan}. Uma única mensagem de dados é disseminada na rede. O objetivo deste caso de uso é avaliar o DDRX operando sozinho na VANET, sem nenhuma outra aplicação necessitando das informações que são disseminadas por ele.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.90\textwidth]{../5_figuras/map.png}
+	\caption{Cenário do centro da cidade de Manhattan, Estados Unidos}
+	\label{fig:manhattan}
+	\medskip
+	Fonte: OpenStreetMaps
+\end{figure}
+
+\subsection{Descrição da simulação}
+\label{sec:descricao}
+
+As simulações foram realizadas no \textit{framework} VEINS 4.3\footnote{\url{http://veins.car2x.org/}} do simulador de redes OMNeT++ 4.6\footnote{\url{http://omnetpp.org/}}, o qual implementa a pilha de protocolo do padrão IEEE 802.11p para comunicação V2V e atenuação de sinal. Para estabelecer um cenário de avaliação, utilizou-se dez ruas de duas pistas em uma área de $1$ Km\textsuperscript{2} do centro da cidade de Manhattan nos Estados Unidos. Essa região foi obtida através do OpenStreetMap\footnote{\url{http://www.openstreetmap.org/}} e importada pelo \textit{Simulation of Urban MObility} (SUMO\nomenclature{\textbf{SUMO}}{\textit{Simulation of Urban MObility}})\footnote{\url{http://sumo.dlr.de}}, versão 0.25.0, para gerar os registros de movimentação dos veículos. Isso permite reproduzir os movimentos dos veículos e as interações V2V.
+
+Os efeitos de atenuação do sinal causados por edifícios foram considerados, onde assumiu-se que cada bloco possui um obstáculo de $80$m x $80$m para representação de edifícios altos. Para quantificar a evolução do tráfego neste cenário, variou-se a densidade de veículos em $100, 200, 300, 400, 500, 600$ e $700$ veículos/km\textsuperscript{2}, com uma AoI de $1$ Km\textsuperscript{2}. A velocidade dos veículos respeita os limites impostos pelo cenário, sendo de no máximo $50.04$ km/h em cada uma das vias.
+
+A taxa de bits na camada MAC foi definida em $18$ Mbit/s e a potência de transmissão para $2.2$mW. Esses parâmetros, juntamente com o modelo de propagação \textit{Two-Ray ground}, fornecem um raio de comunicação de $300$ m. A frequência de envio de \textit{beacons} foi de $1$ Hz. Cada simulação foi executada $33$ vezes com diferentes sementes de aleatoriedade e os resultados apresentam os valores com um intervalo de confiança de 95\%. O tempo de simulação foi de $150$ segundos, que é considerado suficiente para avaliar algoritmos de disseminação de dados \cite{meneguette2014algoritmo}.
+
+No momento em simulação se manteve estável, onde a maior parte dos veículos se encontrava no cenário, um veículo foi selecionado para dar início ao processo de disseminação a partir do envio de uma única mensagem de dados com tamanho de $2048$ bytes. O veículo selecionado é o que esta mais próximo ao centro do cenário. A Tabela \ref{tab:parametros1} resume os parâmetros utilizados na avaliação.
+
+\begin{table}[ht]
+	\centering
+	\caption{Parâmetros das simulações do Caso de Uso I}
+	\vspace{0.2cm} %espaco entre titulo e tabela
+	\label{tab:parametros1}
+	\begin{tabular}{l|l}
+		\hline
+ 		\textbf{Parâmetro} & \textbf{Valor} \\
+		\hline
+ 		Tempo de simulação & 150 s \\
+ 		Densidade de veículos & de 100 a 700 veículos/km\textsuperscript{2} \\
+ 		Velocidade dos veículos & de 0 a 50.04 km/h \\
+ 		Tamanho do cenário & 1 Km\textsuperscript{2} \\
+ 		Área de interesse & 1 Km\textsuperscript{2} \\
+ 		Tecnologia de comunicação & IEEE 802.11p \\
+ 		Potência de transmissão & 2.2 mW \\
+ 		Raio de comunicação & 300 m \\
+ 		Tipo de comunicação & V2V \\
+ 		Taxa de bits & 18 Mbits/s \\
+ 		Frequência de \textit{beacons} & 1 Hz \\
+ 		Tamanho da mensagem de dados & 2048 bytes \\
+		\hline
+	\end{tabular}
+\end{table}
+
+Foram consideradas as seguintes métricas para a avaliação: \textit{(i) Cobertura}: reflete a porcentagem de veículos dentro da AoI que recebem a mensagem; \textit{(ii) Número de mensagens transmitidas}: total de transmissões da mensagem, usado para medir o \textit{overhead}; \textit{(iii) Atraso}: atraso médio de entrega da mensagem da fonte para todos os veículos dentro da AoI; e \textit{(iv) Colisões}: número total de colisões de pacotes na camada MAC.
+
+\subsection{Resultados obtidos}
+
+Para verificação da eficiência de identificação dos vértices de corte pelo DDRX, a Figura \ref{fig:vertices} exibe a média de existência desses vértices para cada uma das densidades avaliadas. O número de vértices de corte cresce conforme aumento da densidade de veículos, o que é um ponto positivo pois assim a escolha dos retransmissores possui um número maior de candidatos, sendo refinada com a adição de outros componentes conforme já discutido na Seção \ref{sec:selecao}. Mesmo na menor densidade, 100 veículos/km\textsuperscript{2}, o número de candidatos identificados é suficiente para o atingimento de índices aceitáveis de cobertura na entrega das mensagens, conforme será apresentado e discutido mais a frente.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.85\textwidth]{../5_figuras/verticesCorte.eps}
+	\caption{Número de vértices de corte identificados no cenário}
+	\label{fig:vertices}
+\end{figure}
+
+A Figura \ref{fig:cobertura_ddrx} apresenta a cobertura atingida pelos protocolos DDRX, CARRO, UV-CAST, CC-DEGREE e \textit{Flooding}. Ao analisar os resultados observa-se que todos os protocolos atingem pelo menos $94.8$\% de cobertura em densidade mais baixa e acima de $98$\% em densidade mais alta. O protocolo CC-DEGREE mesmo na menor densidade atinge o melhor desempenho com $96.8$\% de cobertura, mas conforme a densidade aumenta sua cobertura decai em relação ao protocolo CARRO. O CARRO tem $96.6$\% de cobertura na menor densidade e supera os demais protocolos na maior densidade, com $98.8$\% de cobertura. O protocolo DDRX destaca-se por aumentar sua cobertura conforme aumento da densidade, ou seja, aumenta de $94.8$\% para $98.4$\%. A menor cobertura do DDRX em comparação aos demais protocolos nas densidades mais baixas é justificado pelo fato de que os protocolos UV-CAST, CC-DEGREE e CARRO consideram o mecanismo de \textit{store-carry-forward} para garantia de entrega das mensagens. As altas taxas de cobertura alcançadas pelo \textit{Flooding} são reflexo da falta de seleção de nós retransmissores, impactando no aumento do número de transmissões tal como apresentado na Figura \ref{fig:transmitidos_ddrx}.
+
+\begin{figure}[!h]
+     \centering
+      \includegraphics[width=0.65\textwidth]{../5_figuras/cobertura.eps}
+      \caption{Porcentagem de cobertura atingira por cada protocolo}
+      \label{fig:cobertura_ddrx}
+\end{figure}
+
+A Figura \ref{fig:transmitidos_ddrx} demonstra o número de transmissões que cada protocolo necessita para disseminar dados na rede. Como pode ser observado, o DDRX diminui o número de transmissões em $90.25$\%, $64.10$\%, $57.12$\% e $48.92$\% em relação aos protocolos \textit{Flooding}, CARRO, UV-CAST e CC-DEGREE, respectivamente. Isso é resultado da seleção de nós retransmissores em cada zona de encaminhamento realizada pelo protocolo DDRX. Os protocolos CARRO, CC-DEGREE e UV-CAST consideram a transmissão do pacote em cada contato com um veículo vizinho que ainda não recebeu este pacote, aumentando assim o número de transmissões e atraso tal como apresentado na Figura \ref{fig:atraso_ddrx}. O elevado número de transmissões para o \textit{Flooding} é decorrente da não seleção de nós retransmissores, ou seja, todos veículos que recebem a mensagem de dados a retransmitem. Tanto CC-DEGREE quanto DDRX utilizam métricas de redes complexas e/ou teoria dos grafos para selecionar nós retransmissores, justificando porque  tais protocolos obterem o menor número de transmissões. Vale ressaltar que é essencial realizar a disseminação de dados com baixo número de transmissões para não afetar o desempenho de outras aplicações que compartilham o mesmo canal sem fio.
+
+\begin{figure}[!h]
+     \centering
+      \includegraphics[width=0.65\textwidth]{../5_figuras/transmitidos.eps}
+      \caption{Número total de mensagens transmitidas}
+      \label{fig:transmitidos_ddrx}
+\end{figure}
+
+A Figura \ref{fig:atraso_ddrx} exibe o atraso médio para entrega de dados pelos protocolos DDRX, CARRO, UV-CAST, CC-DEGREE e \textit{Flooding}. O protocolo DDRX dissemina a mensagem com $89.27$\%, $84.32$\%, $41.56$\% e $40.97$\% menos atraso que os protocolos CC-DEGREE, UV-CAST, CARRO e \textit{Flooding}, respectivamente. Os protocolos UV-CAST e CC-DEGREE têm maiores atrasos em comparação com os outros protocolos tanto em cenários esparsos quanto densos, uma vez que consideram o mecanismo de \textit{store-carry-forwarding}. O CARRO mesmo considerando o \textit{store-carry-forwarding} obtém um baixo atraso entre $0.07$ e $0.11$ segundos por não depender exclusivamente do \textit{store-carry-forwarding} para verificação de entrega da mensagem. O protocolo DDRX obteve atraso médio de $0.05$ segundos. O atraso é uma métrica crucial para certos tipos de aplicação, tal como um TMS \cite{de2017traffic}, pois as decisões podem ser tomadas mais rapidamente.
+
+\begin{figure}[!h]
+     \centering
+      \includegraphics[width=0.65\textwidth]{../5_figuras/atraso.eps}
+      \caption{Atraso médio de entrega}
+      \label{fig:atraso_ddrx}
+\end{figure}
+
+A Figura \ref{fig:colisoes_ddrx} apresenta o número médio de colisões de pacotes na camada MAC. Essa métrica permite observar como os protocolos lidam com o aspecto distribuído em seu funcionamento, pois se dois ou mais transmitem uma mensagem com tempos próximos elas irão colidir e a mensagem será perdida, resultando em retransmissões. Como esperado, o \textit{Flooding} é o protocolo com maior número de colisões, sendo resultado da não coordenação no processo de retransmissão de pacotes, uma vez que muitos veículos tentam acessar o canal ao mesmo tempo. O protocolo DDRX possui em média $90.71$\%, $53.71$\%, $46.37$\% e $32.77$\% menos colisões que os protocolos \textit{Flooding}, UV-CAST, CC-DEGREE e CARRO, respectivamente. Isso deve-se a seleção de nós retransmissões eficiente efetuada pelo DDRX, onde diminui-se a quantidade de candidatos a partir da identificação dos vértices de corte em cada zona de encaminhamento, e também pela atribuição de uma distribuição uniforme no momento em que os poucos veículos selecionados agendam suas transmissões.
+
+\begin{figure}[!h]
+     \centering
+      \includegraphics[width=0.65\textwidth]{../5_figuras/colisoes.eps}
+      \caption{Número total de colisões}
+      \label{fig:colisoes_ddrx}
+\end{figure}
+
+\section{Caso de uso II: Sistema de Gerenciamento de Trânsito}
+
+O crescimento desproporcional da quantidade de veículos em relação às melhorias da infraestrutura viária acarreta na incidência de alguns problemas nos grandes centros urbanos \cite{cunha2017sbrc}. Um desses problemas é o congestionamento, onde muita das vezes os condutores não têm nenhum suporte adicional para evitar ou minimizar os impactos desse tipo de situação. Dessa forma, os TMSs têm como objetivo maximizar a eficiência da infraestrutura de transporte disponível minimizando os congestionamentos e todos danos à eles relacionados \cite{de2017gte}. Desta forma, esta seção apresenta um estudo de caso para validar o funcionamento do protocolo DDRX em conjunto com uma aplicação de TMS, a qual necessita da disseminação de dados eficiente para operação. 
+
+Para este caso de uso foi considerado o TMS denominado FASTER \cite{Souza2016fully}, o qual tem como características principais ser totalmente distribuído e segmentar o cenário em diferentes distritos (i.e., sub-regiões) para poder agregar as informações de tráfego das vias. No FASTER, um distrito tem tamanho igual ao raio de comunicação dos veículos. Cada veículo coleta e transmite informações de velocidade média e identificação das vias em seu raio de comunicação através de \textit{beacons}, onde as vias que estiverem por completo são denominadas totalmente cobertas e as que não estiverem são denominadas parcialmente cobertas. Na operação do FASTER, quando um veículo recebe \textit{beacons} com informações das vias, o mesmo armazena essa informação em suas listas de conhecimento de tráfego. O veículo atualiza a informação caso possua uma entrada, e caso contrario adiciona a informação em sua lista. O veículo que estiver mais próximo ao centro do distrito inicia o processo de envio das informações de tráfego agregadas para que outros veículos também atualizem suas listas de conhecimento a fim de criar um conhecimento local do distrito. Nesta etapa, tem-se a primeira disseminação de dados realizada no FASTER.
+
+Em seguida, como as informações de tráfego já foram disseminadas no interior de cada distrito, faz-se necessário disseminar essas informações para os demais distritos, construindo assim um conhecimento global acerca das condições de tráfego. É então que outra disseminação se inicia pelo veículo que estiver mais próximo ao centro de cada distrito, onde é feita uma verificação para que apenas veículos de outros distritos retransmitam a mensagem para não gerar redundâncias para os que já receberam as informações do distrito na primeira disseminação. O FASTER divide a disseminação de dados em duas para não ocasionar \textit{overhead} indesejado na rede com a criação dos conhecimentos de tráfego. Desta forma, este estudo de caso esta focado na aplicação do DDRX para eliminar a primeira disseminação de dados, ou seja, a de criação do conhecimento em cada distrito, fazendo com que a disseminação do conhecimento de tráfego seja enviada para todo o cenário de uma só vez.
+
+\subsection{Descrição da simulação}
+
+Sendo assim, o DDRX foi integrado ao FASTER utilizando as ferramentas supracitadas na Subseção \ref{sec:descricao}. Foi considerado uma região de $1$ Km\textsuperscript{2} do centro da cidade de Manhattan, Estados Unidos, extraída a partir da ferramenta OpenStreepMaps. Os veículos foram inseridos no cenário de forma que a densidade de veículos atinga $500$, $700$, $900$ e $1100$ veículos/km\textsuperscript{2}, onde nessas densidades existem congestionamentos. Cada simulação foi executada $33$ vezes com diferentes sementes de aleatoriedade e os resultados apresentam os valores com um intervalo de confiança de 95\%. O tempo de simulação foi de $2000$ segundos.
+
+Utilizou-se as informações de mobilidade do cenário sem aplicação de nenhum mecanismo de TMS como \textit{baseline}, denominadas aqui como Mobilidade Original do Cenário (MOC). Foi utilizado o FASTER original, e o FASTER considerando o DDRX como forma de disseminação (FASTER-DDRX). Desta forma, para esta avaliação verificou-se o comportamento de MOC, FASTER e FASTER-DDRX em termos de cobertura (quando se aplica), número de mensagens transmitidas para criação do conhecimento de trânsito (quando se aplica), número de mensagens transmitidas para tomada de decisão acerca do gerenciamento de trânsito (quando se aplica), tempo médio de viagem, tempo médio de congestionamento e velocidade média atingida pelos veículos. A Tabela \ref{tab:parametros2} resume os parâmetros utilizados na avaliação do segundo caso de uso.
+
+\begin{table}[ht]
+	\centering
+	\caption{Parâmetros das simulações do Caso de Uso II}
+	\vspace{0.2cm} %espaco entre titulo e tabela
+	\label{tab:parametros2}
+	\begin{tabular}{l|l}
+		\hline
+		\textbf{Parâmetro} & \textbf{Valor} \\
+		\hline
+		Tempo de simulação & 2000 s \\
+		Densidade de veículos & de 500 a 1100 veículos/km\textsuperscript{2} \\
+		Velocidade dos veículos & de 0 a 50.04 km/h \\
+		Tamanho do cenário & 1 Km\textsuperscript{2} \\
+		Área de interesse & 1 Km\textsuperscript{2} \\
+		Tecnologia de comunicação & IEEE 802.11p \\
+		Potência de transmissão & 2.2 mW \\
+		Raio de comunicação & 300 m \\
+		Tipo de comunicação & V2V \\
+		Taxa de bits & 18 Mbits/s \\
+		Frequência de \textit{beacons} & 1 Hz \\
+		Tamanho da mensagem de conhecimento & 2048 bytes \\
+		Tamanho da mensagem de gerenciamento & 2048 bytes \\
+		\hline
+	\end{tabular}
+\end{table}
+
+Foram consideradas as seguintes métricas para esta avaliação: \textit{(i) Cobertura}: reflete a porcentagem de veículos dentro da AoI que recebem a mensagem; \textit{(ii) Número de Transmissões para Construção do Conhecimento de Trânsito}: total de transmissões de mensagens com conhecimento das vias; \textit{(iii) Número de Transmissões para Gerenciamento de Trânsito}: total de mensagens transmitidas para tomada de decisão do TMS; \textit{(iv) Tempo Total de Viagem}: refere-se ao tempo total gasto pelos veículos para concluírem suas viagens; \textit{(v) Tempo em Congestionamento}: tempo total que os veículos ficaram parados em congestionamentos; e \textit{Velocidade Média}: refere-se a velocidade média atingida pelos veículos em seus trajetos no cenário.
+
+\subsection{Resultados obtidos}
+
+A Figura \ref{fig:cobertura_tms} exibe a cobertura do FASTER e do FASTER-DDRX. A cobertura está diretamente relacionada com a porcentagem do número de veículo no interior da AoI que recebem a mensagem de dados disseminada, ou seja, é ideal que os resultados fiquem próximo de 100\%. Pode-se observar que a aplicação do DDRX no FASTER não afeta a taxa de cobertura atingida inicialmente, mostrando assim que o DDRX por si só é um protocolo para disseminação de dados eficiente no que se refere à entrega de dados aos veículos interessados. Tanto o FASTER quanto FASTER-DDRX atingem taxas de 98\% de cobertura na menor densidade de veículos e 99\% de cobertura na maior densidade avaliada.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=10.0cm]{../5_figuras/tms_cobertura.eps}
+	\caption{Porcentagem de Cobertura}
+	\label{fig:cobertura_tms}
+\end{figure}
+
+A Figura \ref{fig:transmissoesTrafego} exibe o número de mensagens de agregação que são necessárias para construir o conhecimento acerca das condições de tráfego do cenário. Nota-se que o FASTER-DDRX dissemina mais mensagens de criação de conhecimento que o FASTER, o que é justificado pela alteração no mecanismo de envio das mensagens para criação desse conhecimento, ou seja, as mensagens são enviadas para que a rede seja inundada pelo FASTER-DDRX. A inundação da rede com mensagens de agregação não ocorria no FASTER por conta do mesmo limitar a primeira disseminação de dados apenas dentro de cada distrito. Esse problema de inundação da rede com as mensagens de agregação pode ser contornado com a aplicação do algoritmo DDRX também nesta etapa do FASTER, já que o escopo inicial é apenas avaliar o número total de transmissões das mensagens de dados para tomada de decisão do TMS.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=10.0cm]{../5_figuras/tms_transmitidosTrafego.eps}
+	\caption{Número de Transmissões para Construção do Conhecimento de Trânsito}
+	\label{fig:transmissoesTrafego}
+\end{figure}
+
+A Figura \ref{fig:transmissoes} exibe o número de transmissões realizadas para gerenciamento de tráfego pelo FASTER e FASTER-DDRX. Pode-se observar que o FASTER-DDRX transmite cerca de $95$\% menos mensagens que o FASTER. Isso deve-se pela eliminação da disseminação de dados para criar o conhecimento entre os distritos. Ou seja, o FASTER-DDRX consegue disseminar em todo o cenário as informações de tráfego das vias inserindo um menor  \textit{overhead} na rede e sem comprometer o bom funcionamento do FASTER.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=10.0cm]{../5_figuras/tms_transmitidos.eps}
+	\caption{Número de Transmissões para Gerenciamento de Trânsito}
+	\label{fig:transmissoes}
+\end{figure}
+
+A Figura \ref{fig:tempoTotal} apresenta o tempo médio que os veículos levam para concluírem suas viagens considerando o FASTER, FASTER-DDRX e MOC. Nesta avaliação, pode-se observar que tanto na densidade de $700$ quanto na de $1100$ veículos/km\textsuperscript{2}, a aplicação do FASTER resulta em maior tempo de viagem em comparação a MOC e FASTER-DDRX. Por outro lado, na densidade de $700$ veículos o FASTER-DDRX diminui em $1.13$\% o tempo médio de viagem em relação aos demais, tendo um menor tempo de viagem mais perceptível para densidade acima de $900$ veículos, sendo menor $18.11$\% que os demais. O aumento no tempo de viagem pode ser resultado do reencaminhamento dos veículos, onde as rotas originais são substituídas por rotas mais longas com menor incidência de congestionamentos tal como pode ser observado na Figura \ref{fig:congestionamento}.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=10.0cm]{../5_figuras/tms_tempoTotal.eps}
+	\caption{Tempo Total de Viagem}
+	\label{fig:tempoTotal}
+\end{figure}
+
+A Figura \ref{fig:congestionamento} exibe o tempo médio que os veículos ficam parados em congestionamentos. Esta avaliação é importante pois mostra a eficiência do algoritmo de roteamento de veículos em relação às condições de tráfego veicular identificadas. Pode-se perceber que com o FASTER-DDRX os veículos ficam menos tempo em congestionamentos. Nas densidades de $500$, $700$ e $900$ veículos/km\textsuperscript{2} o FASTER-DDRX tem resultados próximos ao FASTER, e ambos possuem menor tempo de congestionamento quando comparados a MOC. Já na densidade de $1100$ veículos/km\textsuperscript{2}, o FASTER-DDRX tem resultados superiores a MOC e FASTER. Isso se justifica pela disseminação eficiente empregada no DDRX, especialmente quando a rede está mais densa e a seleção de nós retransmissores possui mais opções de candidatos. Essa análise apresenta que FASTER-DDRX possui desempenho semelhante e até superior ao FASTER, em alguns casos, reiterando a eficiência de disseminação do protocolo DDRX.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=10.0cm]{../5_figuras/tms_tempoCongestionamento.eps}
+	\caption{Tempo em Congestionamento}
+	\label{fig:congestionamento}
+\end{figure}
+
+A Figura \ref{fig:velocidade} exibe a velocidade média atingida pelos veículos considerando o FASTER, FASTER-DDRX e MOC. Nesta avaliação, velocidades médias superiores são indicativos de que os veículos não foram roteados para vias com alto índice de congestionamentos. Sendo assim, pode-se notar que o FASTER-DDRX atinge maiores índices de velocidade em todas as densidades, a qual decai conforme a densidade aumenta devido os maiores índices de congestionamentos. O FASTER se mantém superior ao MOC em todas as densidades, pois reencaminha os veículos eficientemente para rotas menos congestionadas. As rotas que foram indicadas pelo FASTER-DDRX possuem menores índices de tráfego fazendo com que os veículos atinjam maiores velocidades e, consequentemente, percam menos tempo em congestionamentos, conforme já apresentado na Figura \ref{fig:congestionamento}.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=10.0cm]{../5_figuras/tms_velocidadeMedia.eps}
+	\caption{Velocidade Média}
+	\label{fig:velocidade}
+\end{figure}
+
+\newpage
+
+\section{Conclusões do capítulo}
+
+Neste capítulo foi apresentado como o DDRX foi avaliado. Com o detalhamento dos dois casos de uso definidos, um com apenas a disseminação de dados em evidência e o outro levando em consideração o DDRX operando como parte integrada de um sistema para gerenciamento de trânsito. Os parâmetros de simulação foram descritos, bem como todas as ferramentas e cenário utilizados.
+
+Desta forma, a partir da análise dos resultados, identificou-se que o DDRX reduz eficientemente o número de transmissões, atraso de entrega das mensagens e colisões de pacotes na camada MAC em 65.09\%, 64.03\% e 55.89\%, quando comparado com outras soluções de disseminação de dados presentes na literatura. Ainda, identificou-se que o FASTER-DDRX reduz em $95$\% a quantidade de mensagens disseminadas na rede para criação do conhecimento global de tráfego, em relação ao FASTER. O FASTER-DDRX mantém tempo de viagem menor que MOC e FASTER, sendo de $18.11$\%, e as rotas encontradas para os veículos tiveram o menor índice de congestionamentos, ou seja, congestionamento $48.95$\% e $20.5$\% menor em relação ao MOC e FASTER, respectivamente. Isso impacta diretamente no aumento geral da velocidade média atingida pelos veículos com o FASTER-DDRX, tendo aumento de $8$\% e $9$\% em relação a FASTER e MOC, respectivamente.

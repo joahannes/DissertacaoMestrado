@@ -1,0 +1,5 @@
+Adicionar "Comando do usuario": 
+makeindex -s nomencl.ist -t %.nlg -o %.nls %.nlo
+
+Compilar primeiro comando do usuario e depois compilacao normal:
+ALT + SHIFT + F1 -> TexStudio

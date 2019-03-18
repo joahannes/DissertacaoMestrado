@@ -1,0 +1,76 @@
+\chapter{Trabalhos Relacionados}
+\label{cha:relacionados}
+Este capítulo tem como objetivo apresentar os principais trabalhos relacionados a disseminação de dados em cenários urbanos em VANETs. Ele descreve as principais características e o funcionamento de cada trabalho. Além disso, discute sobre as principais vantagens e desvantagens em relação a entrega eficiente das mensagens e inserção de \textit{overhead} indesejado na rede. Foram considerados trabalhos que necessitam e tomam proveito da troca periódica de \textit{beacons} na rede para funcionamento.
+
+\section{Acknowledged Broadcast from Static to highly Mobile (ABSM)}
+
+Ros et al. \cite{ros2012ack} propuseram o protocolo denominado Acknowledged Broadcast from Static to highly Mobile (ABSM), que dissemina mensagens de dados com base no conceito de Conjunto Dominante Mínimo (\textit{Connected Dominating Set} - CDS). O CDS nada mais é do que um conjunto de veículos ótimos para realizarem a retransmissão da mensagem. O ABSM baseia-se no fato de que o CDS provê a melhor solução para o problema de disseminação de dados em uma rede conectada. O CDS é o menor subconjunto de veículos conectados em que, se um veículo não estiver no CDS, então ele está diretamente conectado a algum veículo que está no CDS. Portanto, se todos os veículos no CDS retransmitirem a mensagem, então todos os veículos na rede serão cobertos. Calcular o CDS se faz um problema NP-difícil, com isso, é empregada uma heurística que utiliza informações de vizinhos a um salto para identificar quais veículos estão no CDS criado.
+
+Os veículos pertencentes ao CDS recebem maior prioridade para retransmissão de mensagens. Além disso, ABSM utiliza \textit{beacons} periódicos como um mecanismo para reconhecimento de recebimento das mensagens que foram disseminadas, de maneira a garantir a entrega de dados em redes com conectividade intermitentemente. Logo, no ABSM, quando um veículo recebe uma mensagem, ele espera pelo reconhecimento de seus vizinhos para então calcular o atraso para retransmitir a mensagem. Com isso, a latência na entrega de mensagens depende da frequência com que os \textit{beacons} são trocados.
+
+\section{Urban Vehicular broadCAST (UV-CAST)}
+
+Viriyasitavat et al. \cite{viriyasitavat:2010} propuseram o protocolo \textit{Urban Vehicular broadCAST} (UV-CAST), o qual concentra-se na disseminação de dados em VANETs tanto em cenários densos quanto esparsos. No UV-CAST, se faz necessário que os veículos possuam um mapa digital do cenário no qual está inserido. Cada veículo pode operar em dois diferentes estados, o de supressão de \textit{broadcast} ou \textit{store-carry-forward}. Para decidir em qual dos estados irá operar ao momento que recebe uma nova mensagem de dados, é necessário que haja a troca de \textit{beacons} periódicos para obtenção de informações de seus veículos vizinhos.
+
+Se a rede estiver densa, todos os veículos realizam normalmente o cálculo do tempo de espera para retransmissão. Os veículos que estiverem em uma intersecção possuem prioridade para retransmitir a mensagem. O cálculo do tempo de espera se baseia na distância relativa entres os veículos emissor e receptor, o raio de comunicação do emissor e um tempo máximo de espera definido. Onde, após expiração do tempo máximo e o veículo não receba nenhuma mensagem que já recebeu, então o mesmo retransmite tal mensagem. Caso contrário, a mensagem é descartada. Caso a rede esteja esparsa, o mecanismo de \textit{store-carry-forward} é empregado.
+
+O UV-CAST assume que os veículos em intersecções possuem uma maior probabilidade de conhecer novos vizinhos e, portanto, eles armazenam a mensagem e carregam-na até encontrar um novo vizinho. Por outro lado, se o veículo não é um veículo em intersecção, ele executa um algoritmo de supressão de \textit{broadcast} para retransmitir a mensagem, conforme supracitado. No entanto, o UV-CAST apresenta um alto \textit{overhead}, uma vez que cada veículo tem que transmitir a mensagem a cada novo contato com veículos vizinhos que ainda não tenham recebido a mesma.
+
+\section{ALgoritmo Autônomo para Disseminação De INformações em Redes Veiculares (ALADDIN)}
+
+Meneguette et al. \cite{meneguette2014algoritmo} apresentaram o protocolo chamado ALgoritmo Autônomo para Disseminação De INformações em Redes Veiculares (ALADDIN), o qual tem como principal objetivo diminuir o número de retransmissões de uma mensagem de dados, sem comprometer a cobertura de entrega desta mensagem. O ALADDIN faz uso de dois mecanismos para mitigar o problema de \textit{broadcast storm} e aumentar as chances de entrega da mensagem de dados que será disseminada entre partições de rede. Conceitualmente, partição de rede é uma área onde poucos veículos estão presentes, fazendo com que o processo de disseminação de dados não flua de forma eficiente.
+
+Dessa forma, o protocolo utiliza o conceito de zona de preferência para contornar \textit{broadcast storm}, que é uma região onde os veículos em seu interior são considerados mais adequados para disseminar a mensagem e, com isso, receberam maior prioridade para o processo de retransmissão. Utiliza também um segundo mecanismo, conceituado de Computação Autonômica, que simula a técnica de \textit{store-carry-forward} quando for detectado que a rede está particionada, ou seja, o veículo irá armazenar a mensagem e a retransmitirá somente após uma tomada de decisão com base na probabilidade do veículo retransmitir ou não a mensagem, denominada de eficiência de propagação.
+
+A eficiência de propagação é calculada a partir do número de mensagens transmitidas e o número de \textit{beacons} recebidos em cada veículo, fazendo com que o veículo saiba quando retransmitir ou manter a mensagem. O ALADDIN pode inserir \textit{overhead} indesejado na rede ao armazenar várias mensagens quando um veículo identifica partição na rede (\textit{store-carry-forward}) e encontra outro veículo capaz de continuar o processo de disseminação, além do alto atraso de entrega que isto incorre.
+
+\section{Clustering Coefficient and node DEGREE (CC-DEGREE)}
+
+Cunha et al. \cite{cunha:2014} introduziram o protocolo \textit{Clustering Coefficient and node DEGREE} (CC-DEGREE), o qual identifica os melhores nós retransmissores com base em duas métricas: i) o coeficiente de agrupamento, o qual representa o número de conexões entre um veículo vizinho dividido pelo número total de conexões possíveis entre os vizinhos do veículo; ii) grau do nó, que representa o número de vizinhos a 1 salto que este nó possui. A partir dessas duas métricas, tempos para agendamento de retransmissão são atribuídos para veículos continuarem o processo de disseminação.
+
+O protocolo CC-DEGREE opera independente da densidade do tráfego. No entanto, o CC-DEGREE calcula o coeficiente de agrupamento baseado apenas na posição de cada veículo, resultando em uma baixa variabilidade para cenários densos e impactando a seleção dos nós retransmissores. Esse fato pode ocasionar na atribuição de tempos de espera muito próximos para vários veículos, aumentando assim as colisões no canal sem fio.
+
+\section{Context-Aware Routing pROtocol (CARRO)}
+
+Akabane et al. \cite{akabane:2016} apresentaram o protocolo de disseminação de dados para cenários urbanos e rodoviários denominado \textit{Context-Aware Routing pROtocol} (CARRO). É um protocolo que opera a partir de informações contextuais geográficas e que não requer nenhuma suporte de infraestrutura. O CARRO emprega dois mecanismos diferentes em seu funcionamento: zona de preferência e \textit{store-carry-forward}. O primeiro é para seleção de veículos localizados em setores geográficos de alta prioridade em seu raio de comunicação para continuar o processo de disseminação e, com isso, tratar o problema de \textit{broadcast storm}. O segundo é executado assim que o número de veículos na mesma área geográfica não é satisfatório para continuar o processo de disseminação, ou seja, há uma partição temporal da rede.
+
+Considera-se que cada veículo está equipado com GPS\nomenclature{\textbf{GPS}}{\textit{Global Positioning System}} e possuem equipamentos para fornecimento de mapas digitais, pois assim podem identificar em qual cenário se encontram (rodoviário ou urbano). Assim, cada veículo troca \textit{beacons} periodicamente para obter informações de contexto sobre os veículos vizinhos a 1 salto. Nos \textit{beacons} são enviadas quatro informações, sendo: a direção em que o veículo está se deslocando, cenário em que o veículo se encontra (urbano ou rodoviário), a identificação única do veículo (id) e se o mesmo possui ou não a mensagem de dados. A definição de prioridades para retransmissão da mensagem se baseia em atribuir um menor tempo de espera aos veículos que se encontram nas zonas de preferência, no caso de redes densas.
+
+No caso das redes esparsas, o veículo com a mensagem espera o recebimento de \textit{beacons} de veículos que ainda não possuem a mensagem, denominados de veículos desinformados. Uma vez que um veículo desinformado é encontrado, verifica-se em qual cenário se encontra. Se o veículo estiver em cenário urbano, a transmissão da mensagem é agendada, caso contrário a mensagem é retransmitida logo em seguida. Essa verificação do cenário é importante por conta das velocidades dos veículos que trafegam em rodovias, na maioria das vezes, ser maior do que em cenários urbanos, onde que se houvesse agendamento de transmissão o tempo poderia não ser suficiente e ocorrer a interrupção da conexão entre os veículos.
+
+Pelo fato do CARRO considerar o \textit{store-carry-forward} para mitigar o problema de partição da rede, o atraso de entrega na disseminação de dados pode se elevar. Além disso, cada veículo também tem que transmitir o pacote em cada contato com veículos vizinhos que ainda não receberam este pacote, o que resulta em possível aumento de \textit{overhead} e atraso de entrega das mensagens.
+
+\section{Conclusões do capítulo}
+
+Neste capítulo foi apresentado um conjunto de trabalhos que se relacionam com esta pesquisa, no que tange a disseminação de dados em VANETs. Cada um foi detalhado para se demonstrar que todos buscam priorizar a alta cobertura de entrega das mensagens sem inserir \textit{overhead} indesejado na rede. Assim, com base na análise dos trabalhos relacionados, conclui-se que é essencial estar ciente do conhecimento contextual dos vizinhos mas não limitando-se apenas aos distantes a 1 salto, e ainda, selecionar os melhores retransmissores com base nesse conhecimento sem aumentar o \textit{overhead}, mantendo altas taxas de cobertura, baixo atraso de entrega e o mínimo de colisões de pacotes na camada MAC.
+
+Sendo assim, a Tabela \ref{tab:relacionados} sumariza as características principais de cada trabalho relacionado. O \textit{Flooding} ganha espaço aqui por ser a abordagem mais simples de disseminação e que, na maioria das vezes, se encontra nas avaliações desta natureza, já que o mesmo é o \textit{baseline} para os protocolos de disseminação que fazem uso de comunicação puramente V2V.
+
+\begin{table}[ht]
+	\centering
+	\caption{Características principais dos trabalhos relacionados}
+	\vspace{0.2cm} %espaco entre titulo e tabela
+	\label{tab:relacionados}
+	\begin{tabular}{l|c|c|c|c}
+		\hline
+		\textbf{Protocolo} & \textbf{ZonasEnc} & \textbf{BroadcastStor} & \textbf{MetricasSoci} & \textbf{Vizinhos2} \\
+		\hline
+		\textit{Flooding} &  &  &  & \\
+		ABSM 		& & \checkmark &  & \\
+		UV-CAST 	& \checkmark & \checkmark &  & \\
+		ALADDIN 	& \checkmark & \checkmark &  & \\
+		CARRO		& \checkmark & \checkmark &  & \\
+		CC-DEGREE 	& \checkmark & \checkmark & \checkmark & \\
+		DDRX		& \checkmark & \checkmark & \checkmark & \checkmark\\
+		\hline
+	\end{tabular}
+\end{table}
+
+\noindent
+Legenda para Tabela \ref{tab:relacionados}:
+\begin{itemize}
+	\item ZonasEnc = Faz uso de Zonas de encaminhamento para retransmissão da mensagem.
+	\item BroadcastStor = Busca tratar o problema de \textit{Broadcast storm}.
+	\item MetricasSoci = Utiliza métricas sociais para seleção de retransmissores.
+	\item Vizinhos2 = Considera vizinhos a 2 saltos.
+\end{itemize}

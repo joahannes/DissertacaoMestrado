@@ -1,0 +1,206 @@
+\chapter{Disseminação de Dados baseada em Métricas de Redes Complexas}
+\label{cha:proposta}
+
+Este capítulo descreve o funcionamento do protocolo DDRX, protocolo que considera uma abordagem distribuída baseada em emissor para selecionar os veículos mais adequados para realizarem o processo de retransmissão de mensagens de dados. É descrito como as métricas de redes complexas são combinadas para geração de um valor que determina o quanto um veículo é, ou não, eficiente no processo de disseminação e ranqueia todos os veículos candidatos. Aspectos acerca da complexidade do algoritmo utilizado para seleção dos retransmissores é discutido. Por fim, o protocolo é detalhado a partir da apresentação do algoritmo de seu funcionamento.
+
+\section{Visão geral}
+
+No DDRX, cada veículo deve manter o conhecimento local de seus vizinhos de até dois saltos, que é utilizado para construir um grafo local de diâmetro 2 e identificar o nó mais apropriado para continuar o processo de retransmissão. Vale ressaltar que o DDRX toma proveito dos \textit{beacons} que naturalmente são trocados entre veículos na rede, apenas com adição de alguns campos específicos para seu funcionamento.
+
+Na etapa de seleção de nós retransmissores, o DDRX considera duas métricas de redes complexas: i) centralidade de grau e ii) centralidade de intermediação. A centralidade de grau reflete a popularidade do vértice no grafo a partir do seu número de vizinhos \cite{daly2009social}. Por outro lado, a métrica de centralidade de intermediação indica a importância de um dado vértice para o grafo em função da quantidade de caminhos mínimos que passam pelo mesmo \cite{cuzzocrea:2012}. Em resumo, a intermediação está diretamente relacionada com o vértice cuja sua remoção desconecta a rede, ou seja, os vértices de corte\footnote{Também conhecidos como Pontos de Articulação.} \cite{wang2016articulation, tian2017articulation}. As métricas de centralidade são relevantes por quantificar o nível de importância que um vértice possui dentro da rede, conforme discutido no Capítulo \ref{cha:refTeorico}.
+
+Um possível cenário de disseminação de dados é exibido na Figura \ref{fig:cenarioDisseminacao} e será explorado neste trabalho. Existe um conjunto de veículos no interior de uma AoI, elipse pontilhada vermelha, que é criada a partir de um determinado evento, tendo suas dimensões definidas com base na categoria desse evento, conforme indicado por \cite{gerla2014content}. Um dos veículos (veículo vermelho, denominado neste trabalho de veículo fonte) coleta uma informação qualquer e a encapsula em uma mensagem de dados para disseminar aos outros veículos interessados, \ie, no interior da AoI. Porém, o veículo fonte só possui 3 vizinhos diretos, então a mensagem precisará ser enviada em mais de 1 salto até chegar nos outros veículos que também estão dentro da AoI.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.95\textwidth]{../5_figuras/cenario.eps}
+	\caption{Cenário de disseminação de dados em VANETs}
+	\label{fig:cenarioDisseminacao}
+	\medskip
+	Fonte: \ABNTfonte
+\end{figure}
+
+\noindent\textbf{Definição I:} \textit{Considere um cenário VANET composto por veículos equipados com um rádio compatível com o padrão IEEE 802.11p. Seja \simbolo{$G$}{Grafo contendo todos os veículos do cenário} = $($\simbolo{$V(G)$}{Conjunto de vértices do grafo G}, \simbolo{$E(G)$}{Conjunto de arestas do grafo G}$)$ um grafo dinâmico que representa os enlaces sem fio assimétricos entre os veículos, onde $V(G)$ representa o conjunto de veículos e $E(G)$ representa o enlace de comunicação entre veículos vizinhos. Cada veículo \simbolo{$v$}{Um veículo $\in V(G)$} $\in V(G)$ conhece sua posição em andamento \simbolo{$p_{atual}$}{Posição atual composta pelas coordenadas $x$ e $y$} e o conjunto de veículos vizinhos $N_v \subseteq V(G)$ composto por vizinhos a 1 salto de $v$. Por fim, seja $E_v' \subseteq E(G)$ o conjunto dos enlaces de comunicação entre $v$ e seus vizinhos.}
+
+\subsection{Conhecimento da vizinhança}
+
+Na operação do protocolo DDRX, se faz necessário a criação de um conhecimento de vizinhança para tomada de decisão acerca dos possíveis veículos retransmissores. Assim, cada veículo $v$ deve transmitir \textit{beacons} periódicos contendo sua identificação \simbolo{$id$}{Identificação única do veículo}, sua posição atual $p_{atual}$, e seus vizinhos \simbolo{$N_v$}{Lista de vizinhos a 1 salto} a 1 salto para que o veículo receptor de \textit{beacons} possa construir o conhecimento contextual sobre seus vizinhos a 2 saltos. Dessa forma, ao receber um \textit{beacon}, o veículo salva essa informação em sua lista de vizinhos \simbolo{$listaN_v$}{Lista de vizinhos a 2 saltos} se ainda não possuir tal entrada. Se o veículo já possuir a entrada de um mesmo $id$, apenas atualiza as informações na lista. 
+
+Para exemplificação, a Figura \ref{fig:cenario_grafo} apresenta uma abstração do cenário de disseminação contido na Figura \ref{fig:cenarioDisseminacao}, com apenas os veículos no interior da AoI. Os veículos são representados por vértices numerados de 1 a 10, sendo denominados como $v_1, \cdots, v_{10}$, com as respectivas arestas para veículos vizinhos a 1 salto.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../5_figuras/cenario_grafo.eps}
+	\caption{Abstração gráfica do cenário de disseminação da Figura \ref{fig:cenarioDisseminacao}}
+	\label{fig:cenario_grafo}
+	\medskip
+	Fonte: \ABNTfonte
+\end{figure}
+
+Assim, a Tabela \ref{tab:listaVizinhos} ilustra como as informações são guardadas na $listaN_v$ de $v_1$. O campo $id$ indexa a lista com os $ids$ dos veículos vizinhos a $v_1$, o campo $p_{atual}$ comporta suas respectivas coordenadas geográficas e $N_v$ é a lista de vizinhos a 1 salto de cada um dos veículos da coluna $id$, isto é, os vizinhos a 2 saltos de $v_1$.
+
+\begin{table}[!h]
+	\centering
+	\caption{Exemplo das informações contidas na $listaN_v$ do veículo $v_{1}$}
+	\vspace{0.2cm}
+	\label{tab:listaVizinhos}
+	\begin{tabular}{c|c|c}
+		\hline
+		$id$	& $p_{atual}$		& $N_v$	\\
+		\hline
+		2		& (101,35)	& (5, 6)        \\
+		\hline
+		3   	& (192,79)	& (1, 4, 8)   	\\
+		\hline
+		4   	& (222,55)	& (1, 3, 7, 8)  \\
+		\hline
+	\end{tabular}
+\end{table}
+
+Pode-se observar na Tabela \ref{tab:listaVizinhos} que a $listaN_v$ de $v_{1}$ comporta os veículos de $id$ 2, 3 e 4, com suas respectivas posições geográficas. O ponto principal é a coluna $N_v$, mostrando que o veículo de $id$ 5 somente é alcançado por $v_{1}$ através de 2, o veículo 8 é alcançado através dos veículos 3 ou 4 e assim sucessivamente com os demais índices da lista. Com essa organização é possível ter conhecimento da vizinhança além dos veículos dentro do raio de comunicação de $v_{1}$, ou seja, dos seus vizinhos a 2 saltos. 
+
+Em decorrência da mobilidade dos nós na rede ser altamente dinâmica, as informações de vizinhança podem se tornar desatualizadas em um curto intervalo de tempo. Diante disto, um mecanismo para atualização das informações em $N_v$ se faz necessário. Algumas implementações da literatura \cite{rehman2016adaptive} consideram atualizar por completo a lista de vizinhos ao final de uma janela de tempo definida ou atualizar a lista de vizinhos com base no não recebimento de \textit{beacons} \cite{cunha:2014, oliveira2017reliable}. Considerou-se a primeira abordagem de atualização por atender às necessidades do protocolo e apresentar bons resultados, conforme poderá ser visto no Capítulo \ref{cha:avaliacao}.
+
+\subsection{Seleção de retransmissores}
+\label{sec:selecao}
+
+%Justificativa pela utilização de Grafos
+Para melhor explorar as informações de vizinhança que foram obtidas, se faz necessária a utilização de uma estrutura que permita visualizar as iterações entre os nós da rede para assim descobrir os melhores veículos para retransmitirem a mensagem de dados. Então, a representação da rede em forma de grafo é escolhida por ser bastante difundida na literatura e permitir a visualização das conexões entre os veículos e como a dinâmica de propagação pode ocorrer através da rede.
+
+%Vertices de corte
+Em Teoria dos Grafos, e mais especificamente em grafos simples, a remoção de um único vértice, chamado vértice de corte, faz com que o grafo se torne desconexo. Ou seja, a remoção desse vértice resulta no aumento dos componentes conexos do grafo. Para entender, sejam $a$, $b$ e $c$ vértices em $G$, onde $a$ só é considerado um vértice de corte se todo caminho entre $b$ e $c$ passa por $a$ ou existe um particionamento do conjunto de vértices $V - a$ em dois subconjuntos $V_1$ e $V_2$ tal que qualquer caminho entre $b \in V_1$ e $c \in V_2$ passa obrigatoriamente pelo vértice $a$ \cite{prestes2016grafos}.
+
+%Link entre Vertices de corte e DDRX
+Sendo assim, no momento em que o DDRX necessita disseminar uma mensagem, cria-se um subgrafo induzido por arestas \simbolo{$G[E_u']$}{Subgrafo de $G$ contendo apenas os veículos vizinhos a 1 e 2 saltos} para cada $u \in listaN_v$, representando os enlaces de conexão entre o veículo $v$ e seus vizinhos a 1 e 2 saltos. Define-se a avaliação para seleção dos retransmissores em um subgrafo de $G$ para tentar contornar a curta validade temporal das informações geográficas dos nós da rede. Então, o subgrafo criado tem validade apenas para o momento em que a mensagem de dados deve ser enviada, sendo destruído logo em seguida. Assim, o DDRX identifica cada veículo candidato à retransmissor como um vértice de corte em $G[E_u']$ criado a partir das informações de conhecimento de vizinhança.
+
+A utilização dessa abordagem para seleção é motivada pelo fato de que tais nós representam pontos comuns para troca de informações. O vértice de corte também é o vértice com o maior índice de centralidade de intermediação, possibilitando o direcionamento da troca de informações entre grupos de nós \cite{cuzzocrea:2012, freeman1977set}. A identificação de tais vértices pode ser realizada através da verificação unificada de cada vértice no grafo, ou seja, removendo vértice por vértice e avaliando se o grafo ainda permanece conexo. Porém, tal abordagem se torna custosa computacionalmente por depender do tamanho do grafo em análise e da estrutura de dados utilizada em sua construção, tendo complexidade no tempo $\mathcal{O}(V*(V+E))$ para grafos usando lista de adjacências, por exemplo \cite{rebedea2010}.
+
+Uma abordagem mais eficiente para identificação dos vértices de corte, e que é utilizada neste trabalho, é a aplicação do algoritmo de Tarjan \cite{tarjan:1972}. Tal algoritmo faz uso da Busca em Profundidade (\textit{Depth-First-Search} - DFS\nomenclature{\textbf{DFS}}{\textit{Depth-First-Search}}) para decomposição de um grafo qualquer em uma árvore DFS com complexidade no tempo e espaço $\mathcal{O}(V+E)$. A premissa principal de uma árvore DFS é que um vértice $u$ é pai de outro vértice $v$ se e somente se $v$ for descoberto através do vértice $u$.
+
+O algoritmo de Tarjan define duas regras, representadas aqui pela função \simbolo{$\phi(v)$}{Função para identificação de vértices de corte do algoritmo de Tarjan}, para identificação dos vértices de corte em um grafo. Sendo: (i) $v$ é raiz da subárvore e possui pelo menos 2 filhos e (ii) $v$ não é raiz da subárvore e tem um filho $u$, tal que nenhum vértice da subárvore enraizada por $u$ tenha uma aresta de retorno para algum antepassado de $v$, conforme apresentado na Equação \ref{eq:funcao_tarjan}
+
+\begin{equation}\label{eq:funcao_tarjan}
+\phi(v) =
+\begin{cases} 
+1 & \text{$v$ é raiz e } N_v \geq 2,\\
+1 & \text{$v$ não é raiz e possui um filho } u \\
+& \text{de tal modo que } N_v-\{u\}\cap N_u-\{v\}=\emptyset \\
+0 & \text{Caso contrário}
+\end{cases}
+\end{equation}
+
+Desta forma, cada veículo encontra um conjunto de vértices de corte \simbolo{$v_{corte}$}{Conjunto dos vértices de corte identificados} $\subseteq V(G[E_u'])$ com a aplicação da função $\phi(v)$ para cada $v \in V(G[E'_u])$. A Figura \ref{fig:grafo} apresenta um exemplo do subgrafo $G[E_u']$ para o vértice $v$. O vértice $v$ pode identificar qual é o melhor candidato a ser selecionado como nó retransmissor que, neste caso, são os vértices $u$ e $x$, uma vez que eles satisfazem as condições impostas no algoritmo de Tarjan. Pois, a remoção de $u$ e $x$ resultaria na desconexão direta de $s$, $t$ e $w$ com o restante do subgrafo, respectivamente.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.60\textwidth]{../5_figuras/grafo_sbrc18.png}
+	\caption{Subgrafo induzido por arestas $G[E_u']$}
+	\label{fig:grafo}
+	\medskip
+	Fonte: \ABNTfonte
+\end{figure}
+
+Após identificação dos vértices de corte, se faz necessário filtrar os melhores desses vértices. Pelo fato de se estar avaliando apenas um subgrafo de $G$, nomeadamente $G[E_u']$, optou-se por diferenciar cada veículo candidato à retransmissor a partir de seus índices de centralidade com a combinação de duas métricas de centralidade que refletem efeitos mais locais do que globais para a rede, sendo as métricas de centralidade de grau e centralidade de intermediação, conforme bem discutido no Capítulo \ref{cha:refTeorico}.
+
+O DDRX seleciona o veículo que seja vértice de corte (maior índice de centralidade de intermediação) de acordo com a Equação \ref{eq:funcao_tarjan}, considerando que tal nó possua a maior quantidade de vizinhos a 1 salto (maior índice de centralidade de grau), o que foi denominado neste contexto de coeficiente de vizinhança, e assim possa alcançar uma maior quantidade de veículos realizando apenas uma única transmissão. Considera-se ainda, que o veículo esteja mais próximo à borda do raio de comunicação para diminuir a quantidade de retransmissões da mensagem no interior da AI. Essa seleção ocorre com a decomposição do raio de comunicação do veículo detentor da mensagem a ser transmitida \simbolo{$v_e$}{Veículo emissor} em quatro quadrantes, nomeados zonas de encaminhamento.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.50\textwidth]{../5_figuras/ddrx_zona.png}
+	\caption{Zonas de Encaminhamento}
+	\label{fig:zona}
+	\medskip
+	Fonte: \ABNTfonte
+\end{figure}
+
+A Figura \ref{fig:zona} exibe um exemplo de como é realizada a definição das zonas de encaminhamento do DDRX. As quatro zonas são denominadas como se segue: \textit{primeiraZona} = $[0,90]$º (comporta o veículo $y$), \textit{segundaZona} = $[91,180]$º (comporta o veículo $u$), \textit{terceiraZona} = $[181,270]$º (não comporta nenhum veículo) e \textit{quartaZona} = $[271,359]$º (comporta o veículo $x$). Essa segmentação é realizada para contornar o problema de bifurcação da disseminação que foi identificado com a realização dos experimentos, problema este que consiste em direcionar o fluxo de disseminação das mensagens de dados em uma única direção, por selecionar apenas um único veículo, podendo ser essa direção oposta de onde a maior parte dos nós da rede se encontra. 
+
+Com base nas zonas de encaminhamento onde os veículos retransmissores serão identificados, se faz necessária a definição de como estes serão selecionados após essa identificação. O DDRX calcula um ganho de retransmissão para cada vértice de corte e faz uma verificação se o valor calculado é o maior atual em cada zona de encaminhamento. O objetivo da aplicação deste ganho é realizar um desempate caso exista mais de um vértice de corte em uma mesma zona de encaminhamento, já que o objetivo do protocolo é selecionar eficientemente os retransmissores para não realizar transmissões desnecessárias.
+
+O calculo do ganho de retransmissão baseia-se em dois fatores principais: \textit{(i)} distância relativa entre o veículo $v_e$ e seu vizinho candidato à retransmissor \simbolo{$v_c$}{Veículo candidato à retransmissor}, a partir das posições $p_{atual}$ conhecidas por cada um, tendo como limiar o raio de comunicação $raio$ dos veículos; e \textit{(ii)} coeficiente de vizinhança, que indica o número de vizinhos $|N_v|$ a 1 salto (centralidade de grau) do veículo $v_c$ dividido pelo maior grau de vizinhança $max(N_v)$ em $G[E_u']$. Todos esses parâmetros são multiplicados por um valor $w$ para manter o resultado no intervalo $[0,1]$. O veículo com maior ganho de retransmissão é selecionado como retransmissor, conforme denotado na Equação \ref{eq:ganho}.
+
+\begin{equation}
+\label{eq:ganho}
+\operatorname*{arg\,max}_{v \in V(G[E'_u])\ \mid \ \phi(v)=1} w \left(\frac{distancia(v_c,v_e)}{raio} + \frac{|N_v|}{max(N_v)}\right)
+\end{equation}
+
+Caso não seja identificado pelo menos um vértice de corte (Equação \ref{eq:funcao_tarjan}), o protocolo DDRX deve selecionar o veículo que possui o maior coeficiente de vizinhança, denotado na Equação \ref{eq:ganho_coeficiente}, em cada zona de encaminhamento e que também está mais próximo à borda do raio de comunicação de $v_e$. Considera-se essa abordagem pelo fato de que quanto mais vizinhos um veículo possui (maior centralidade de grau), mais veículos à 1 salto recebem sua mensagem \cite{cunha:2014}.
+
+\begin{equation}
+\label{eq:ganho_coeficiente}
+%\frac{|N_v|}{max(N_v)}
+w \left(\frac{distancia(v_c,v_e)}{raio} + \frac{|N_v|}{max(N_v)}\right)
+\end{equation}
+
+\subsection{Funcionamento}
+
+O Algoritmo \ref{alg:processamento} resume o funcionamento do DDRX. As entradas do algoritmo consistem na mensagem de dados $msg$ a ser retransmitida, lista de vizinhança $listaN_v$ e posicionamento atual $p_{atual}$ do veículo emissor $v_e$. No momento em que $v_e$ recebe a mensagem de dados, verifica se o seu $id$ foi indicado como retransmissor para esta mensagem (Linha 2) e, caso negativo, apenas descarta a mensagem e não realiza nenhuma outra ação. Caso positivo, o processo avança e se é construído o subgrafo $G[E_u']$ (Linha 3) com as informações de vizinhança obtidas através da troca de \textit{beacons}. A partir do subgrafo criado, é aplicado o algoritmo de Tarjan para identificação dos vértices de corte (Linha 4). Como as informações de posicionamento tanto do $v_e$ quanto de $v_c$ são conhecidas, o ângulo\footnote{Cálculo realizado a partir da função \textbf{atan2(x,y)} presente na linguagem de programação C++ \cite{cplusplus}.} entre eles é calculado (Linha 5) para identificação futura de qual zona de encaminhamento cada um está.
+
+\begin{algorithm}[!h]
+	\Entrada{$msg$, $listaN_v$, $(y_e, x_e)$
+	}
+	\Saida{$x$ // Nó selecionado para retransmitir a mensagem}
+	\Inicio{
+		\Se{meuId = busca(listaRelays)}{
+			$G[E_u']$ = constroiGrafo($listaN_v$) \\
+			listaVerticesCorte = algoritmoTarjan($G[E_u']$) \\
+			angulo = atan2($y_f - y_c$, $x_f - x_c$) $\cdot \frac{180}{\pi}$\\
+			%\Se{angulo $<$ 0}{
+			%	angulo = 360.0 + angulo \\
+			%}
+			\Se{listaVerticesCorte.size $>$ 0}{
+				
+				%// Returns the principal value of the arc tangent of y/x, expressed in radians.
+				$x$ = Cálculo realizado na Equação \ref{eq:ganho}\\
+				
+				\Se{$angulo \geq 0.0$ \textbf{e} $angulo \leq 90.0$}{
+					\Se{x = maiorPrimeiro}{
+						listaRelays.set(0,x)
+					}
+				}
+				\SenaoSe{$angulo > 90.0$ \textbf{e} $angulo \leq 180.0$}{
+					\Se{x = maiorSegundo}{
+						listaRelays.set(1,x)
+					}
+				}
+				\SenaoSe{$angulo > 180.0$ \textbf{e} $angulo \leq 270.0$}{
+					\Se{x = maiorTerceiro}{
+						listaRelays.set(2,x)
+					}
+				}
+				\Senao{
+					\Se{x = maiorQuarto}{
+						listaRelays.set(3,x)
+					}
+				}
+				enviaMensagem($msg \rightarrow listaRelays$) \\
+				destroiGrafo($G[E_u']$) \\
+			}
+			\Senao{
+				$x$ = Cálculo dado pela Equação \ref{eq:ganho_coeficiente} \\
+				Mesmos procedimentos realizados da linha 8 à linha 19 \\
+				enviaMensagem($msg \rightarrow listaRelays$) \\
+				destroiGrafo($G[E_u']$) \\
+			}
+			%		}
+			%		\Senao{
+			%			Descarta $msg$;
+			%		}
+		}
+		\Senao{
+			descarta $msg$;
+		}
+	}
+	\caption{Criação do subgrafo para identificação dos retransmissores.}
+	\label{alg:processamento}
+\end{algorithm}
+
+Com o subgrafo criado, o DDRX verifica se $v_e$ possui vértices de corte ou não (Linha 6). Caso possua, realiza o cálculo do ganho de retransmissão (Linha 7) para começar a identificação de qual zona de encaminhamento $v_c$ se encontra. Por exemplo, se a lista de vértices de corte tem tamanho igual a 2 e a verificação do primeiro vértice indique que o mesmo se encontra na \textit{primeiroZona}, o $id$ deste veículo é adicionado no primeiro índice da estrutura utilizada para guardar os veículos indicados como retransmissores \textit{listaRelays} (Linha 10) e enviados na mensagem $msg$. Se o segundo veículo também estiver em \textit{primeiraZona}, é feita a comparação para saber quem possui maior valor de ganho de retransmissão para esta zona (Linha 9), sendo o de maior ganho indicado no índice correspondente de \textit{listaRelays} (Linha 10). Esse processo é realizado em todas as zonas de encaminhamento (Linha 8 até 19).
+
+Se no subgrafo criado não existir ao menos um vértice de corte, a avaliação passa a ser realizada pelo coeficiente de vizinhança (Linha 22). O cálculo realizado segue o mesmo princípio do que já foi discutido, porém considera apenas informações de centralidade de grau de $v_c$ (Linha 23). Os mesmos procedimentos empregados anteriormente também são válidos aqui, seja as verificações de ângulo, verificação dos maiores coeficiente de vizinhança em cada uma das zonas de encaminhamento e atualização dos índices em \textit{listaRelays} a partir dos resultados das comparações (Linha 24).
+
+Após identificação dos nós retransmissores, o protocolo DDRX adiciona os seus respectivos $ids$ na mensagem $msg$ e a envia em \textit{broadcast} (Linha 20). Levando em consideração que o subgrafo já foi utilizado para definir os retransmissores contidos na mensagem de dados enviada, o mesmo é destruído por não ser mais válido e para liberar recursos computacionais para a rede (Linhas 21 e 26). Conforme recebimento da mensagem por parte de $v_c$, cada receptor verifica se a mesma já foi recebida anteriormente para evitar retransmissão redundante. Se já a recebeu, descarta. Caso o veículo ainda não tenha recebido, verifica-se a informação dos retransmissores selecionados \textit{listaRelays} que está contida na mensagem (Linha 2). Se o veículo receptor possuir o mesmo $id$ indicado na mensagem, ele inicia um novo processo de seleção.
+
+\section{Conclusões do Capítulo}
+
+Neste capítulo foi apresentado o DDRX. Seu funcionamento foi dividido em duas etapas para melhor entendimento de sua operação. Foi discutido como as informações de Conhecimento de vizinhança são armazenadas e mantidas para garantir que a Seleção de retransmissores construa o subgrafo induzido por aresta que é utilizado para identificar os melhores veículos para realizarem a disseminação de dados a partir de informações concisas e válidas no aspecto temporal. Aspectos acerca da complexidade do algoritmo são apresentados e como as métricas de redes complexas são exploradas no protocolo.

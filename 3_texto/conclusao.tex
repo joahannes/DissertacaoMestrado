@@ -1,0 +1,42 @@
+\chapter{Conclusão}
+\label{cha:conclusao}
+
+Diversas aplicações em VANETs necessitam que dados sejam disseminados na rede para execução de suas tarefas. Porém, conforme investigado pela literatura, esta é uma tarefa desafiadora devido as características específicas das VANETs, tais como, tempo curto de contato entre os veículos e mobilidade altamente dinâmica, o que resulta em mudanças constantes de sua estrutura topológica. Desta forma, para contornar tais desafios, foi apresentado o protocolo DDRX para disseminação de dados com baixo \textit{overhead}, colisões e atraso, e que mantém alta cobertura de entrega das mensagens de dados.
+
+No DDRX, cada veículo deve manter o conhecimento local referente a seus vizinhos distantes a 1 e 2 saltos, denominado conhecimento de vizinhança. Para isso, o protocolo toma proveito dos \textit{beacons} que naturalmente são trocados nesse tipo de rede com a adição de alguns campos específicos para construção e manutenção desse conhecimento. Ao passo que um veículo necessita disseminar uma mensagem de dados na rede, é construído um grafo de diâmetro 2 que comporta seus vizinhos a 1 e 2 saltos. A partir do grafo criado, métricas de redes complexas são utilizadas a fim de identificar os melhores veículos para continuarem o processo de retransmissão da mensagem.
+
+A primeira métrica utilizada foi a de Centralidade de Intermediação, que indica o nó mais central como aquele que faz parte do maior número de caminhos mínimos na rede, ou seja, é um bom mediador para o fluxo de informações. Um algoritmo de complexidade no tempo linear foi utilizada para identificação dos nós com maior índice de centralidade de intermediação. A outra métrica foi a Centralidade de Grau, que identifica o nó mais central na rede com base no número de ligações que este nó possui, ou seja, esse nó se relaciona com um alto número de outros nós, o que se torna interessante no caso de disseminação pois a partir de um único nó vários outros podem ser alcançados. As duas métricas foram combinadas a uma restrição que considera o nó mais próximo à borda do raio de comunicação como prioritário na seleção de retransmissores e assim foi criado um limiar denominado ganho de retransmissão para ranquear os veículos candidatos a retransmissores. 
+
+Para avaliar o desempenho do DDRX, foram construídos dois casos de uso, onde o primeiro busca avaliar questões específicas de disseminação de dados e o segundo avalia seu funcionamento em conjunto a uma aplicação de gerenciamento de trânsito que necessita que dados sejam disseminados de forma eficiente para tomada de decisão. No primeiro caso de uso, o protocolo DDRX é comparado aos protocolos UV-CAST, CC-DEGREE, CARRO e \textit{Flooding} e os resultados obtidos mostraram que o DDRX reduz o \textit{overhead} em $65.09$\%, atraso médio de entrega em $64.03$\% e colisões de pacotes na camada MAC em $55.89$\%, mantendo uma taxa de cobertura em até $98$\%. Isso demostra a eficiência na seleção de nós retransmissores em comparação aos outros protocolos avaliados.
+
+Adicionalmente, o segundo caso de uso avaliou o DDRX operando em conjunto ao TMS denominado FASTER, dando origem ao FASTER-DDRX. O FASTER realiza duas disseminações de dados para operar, onde a primeira diz respeito à criação do conhecimento de trânsito e a segunda é para a gerência de trânsito propriamente dita. Os resultados mostraram que a utilização do DDRX é capaz de aumentar a eficiência do TMS, melhorando as condições de tráfego em alguns cenários avaliados e também utilização da rede em si. Em particular, o FASTER-DDRX foi capaz de reduzir a quantidade de transmissões das mensagens de gerenciamento de trânsito em $95$\%, reduzir o tempo que os veículos ficam presos em congestionamentos em $48.95$\%, tudo isso mantendo o tempo de viagem próximo das outras soluções avaliadas.
+
+Os trabalhos futuros que podem ser desenvolvidos a partir desta pesquisa incluem:
+
+\begin{itemize}
+	\item Adicionar outras métricas de centralidade para refinamento do DDRX;
+	\item Considerar questões de integração com a rede LTE para roteamento das mensagens de forma híbrida em cenários V2X;
+	\item Avaliar a integração realizada entre TMS e DDRX em densidades maiores e cenários mais realísticos, como por exemplo o trace da cidade de Colônia, Alemanha, disponibilizado através do projeto TAPASCologne \cite{tapascologne};
+	\item Projetar uma solução para gerenciamento de trânsito que considere inteiramente métricas de redes complexas em seu funcionamento.
+\end{itemize}
+
+\pagebreak
+
+\section{Lista de publicações}
+\noindent
+Os resultados obtidos nesta dissertação foram publicados nos seguintes eventos:
+
+\begin{enumerate}
+	\item \textbf{COSTA, J.}; LOBATO, W.; DE SOUZA, A. M.; ROSARIO, D.; VILLAS, L. A.; CERQUEIRA, E. ``Centrality-based Data Dissemination Protocol for Vehicular Ad hoc Networks''. In: \textit{Anais do IEEE International Symposium on Network Computing and Applications}. Cambridge, EUA. NCA - 2017. \cite{costa2017centrality}
+	
+	\item \textbf{COSTA, J.}; ROSARIO, D.; DE SOUZA, A. M.; VILLAS, L. A.; CERQUEIRA, E. ``Protocolo para Disseminação de Dados em VANETs baseado em Métricas de Redes Complexas: Um Estudo de Caso com Sistema de Gerenciamento de Tráfego". In: \textit{Anais do XXXVI Simpósio Brasileiro de Redes de Computadores e Sistemas Distribuídos}. Campos do Jordão, SP. SBRC - 2018. \cite{costa2018protocolo}
+	
+	\item \textbf{COSTA, J.}; ROSARIO, D.; DE SOUZA, A. M.; VILLAS, L. A.; CERQUEIRA, E. ``Data Dissemination Based on Complex Networks' Metrics for Distributed Traffic Management Systems''. In: \textit{Anais do IEEE Symposium on Computers and Communications}. Natal, RN. ISCC - 2018. \cite{costa2018data}
+\end{enumerate}
+
+\noindent
+Além disso, este trabalho contribuiu para a publicação do seguinte artigo:
+
+\begin{enumerate}
+	\item LOBATO, W.; \textbf{COSTA, J.}; CERQUEIRA, E. ``Avaliação Exploratória da Disseminação de Vídeos para Aplicações \textit{See-Through} em Redes Veiculares". In: \textit{Anais do XXIII Workshop de Gerência e Operação de Redes e Serviços (WGRS) - XXXVI Simpósio Brasileiro de Redes de Computadores e Sistemas Distribuídos}. Campos do Jordão, SP. WGRS - 2018. \cite{junioravaliacc}
+\end{enumerate}
