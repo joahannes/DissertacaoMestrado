@@ -43,12 +43,12 @@ Para criar a lista de abreviaturas em ordem alfabética via terminal, basta exec
 
 Obs:
 
-Para a lista de abreviaturas funcionar, você deve adicionar a abreviatura e descrição dela durante a escrita do seu documento, por exemplo: Para adicionar a abreviatura VANETs na lista, na primeira vez que aparecer VANETs no texto basta adicionar:
+Para a lista de abreviaturas funcionar, você deve adicionar a abreviatura e descrição dela durante a escrita do seu documento, Por exemplo, na primeira vez que aparecer a abreviatura VANETs no texto, basta adicionar o comando:
 
 > \nomenclature{\textbf{VANETs}}{\textit{Vehicular Ad hoc Networks}}
 
 Veja o exemplo no parágrafo:
 
-Este capítulo introduz os conceitos sobre Redes Veiculares Ad hoc (\textit{Vehicular Ad hoc Networks} - VANETs\nomenclature{\textbf{VANETs}}{\textit{Vehicular Ad hoc Networks}}) por meio de uma visão geral sobre o tema. Levanta a discussão acerca da motivação para elaboração deste trabalho, ilustrando os principais desafios existentes para a construção de propostas a nível de disseminação de dados eficiente. Apresenta os objetivos que envolvem o trabalho, além de sumarizar as contribuições essenciais do mesmo. Por fim, apresenta o conteúdo dos próximos capítulos.
+_Este capítulo introduz os conceitos sobre Redes Veiculares Ad hoc (Vehicular Ad hoc Networks - VANETs\nomenclature{\textbf{VANETs}}{\textit{Vehicular Ad hoc Networks}}) por meio de uma visão geral sobre o tema. Levanta a discussão acerca da motivação para elaboração deste trabalho, ilustrando os principais desafios existentes para a construção de propostas a nível de disseminação de dados eficiente. Apresenta os objetivos que envolvem o trabalho, além de sumarizar as contribuições essenciais do mesmo. Por fim, apresenta o conteúdo dos próximos capítulos._
 
 Feito. :)
