@@ -55,4 +55,4 @@ Feito. :)
 
 ### Resultado:
 
-> https://github.com/joahannes/DissertacaoMestrado/blob/master/1_principal/mestrado_joahannes.pdf
+[Dissertação - Joahannes Costa](https://github.com/joahannes/DissertacaoMestrado/blob/master/1_principal/mestrado_joahannes.pdf)
