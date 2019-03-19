@@ -52,3 +52,7 @@ Veja o exemplo no parágrafo:
 _Este capítulo introduz os conceitos sobre Redes Veiculares Ad hoc (Vehicular Ad hoc Networks - VANETs\nomenclature{\textbf{VANETs}}{\textit{Vehicular Ad hoc Networks}}) por meio de uma visão geral sobre o tema. Levanta a discussão acerca da motivação para elaboração deste trabalho, ilustrando os principais desafios existentes para a construção de propostas a nível de disseminação de dados eficiente. Apresenta os objetivos que envolvem o trabalho, além de sumarizar as contribuições essenciais do mesmo. Por fim, apresenta o conteúdo dos próximos capítulos._
 
 Feito. :)
+
+### Resultado:
+
+[embed] https://github.com/joahannes/DissertacaoMestrado/blob/master/mestrado_joahannes.pdf [/embed]
