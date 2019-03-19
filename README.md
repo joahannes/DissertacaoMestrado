@@ -55,4 +55,4 @@ Feito. :)
 
 ### Resultado:
 
-[embed]http://www.lrc.ic.unicamp.br/~joahannes/artigos/joahannes_dissertacao_vFINAL.pdf[/embed]
+[embed] http://www.lrc.ic.unicamp.br/~joahannes/artigos/joahannes_dissertacao_vFINAL.pdf [/embed]
