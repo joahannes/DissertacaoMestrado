@@ -55,4 +55,4 @@ Feito. :)
 
 ### Resultado:
 
-[Link para a Dissertação em PDF](https://github.com/joahannes/DissertacaoMestrado/blob/master/1_principal/mestrado_joahannes.pdf" target="_blank)
+[Link para a Dissertação em PDF](https://github.com/joahannes/DissertacaoMestrado/blob/master/1_principal/mestrado_joahannes.pdf)
