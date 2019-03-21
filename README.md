@@ -53,6 +53,7 @@ _Este capítulo introduz os conceitos sobre Redes Veiculares Ad hoc (Vehicular A
 
 Feito. :)
 
+<<<<<<< HEAD
 ## Autores:
 
 > [Denis Rosário](#)
@@ -61,3 +62,8 @@ Feito. :)
 
 > [Joahannes Costa](http://www.lrc.ic.unicamp.br/~joahannes)
 
+=======
+### Resultado:
+
+[Link para a Dissertação em PDF](https://github.com/joahannes/DissertacaoMestrado/blob/master/1_principal/mestrado_joahannes.pdf)
+>>>>>>> eb69987d9e3dd8b89a239f50271e8d1c5ebed230
