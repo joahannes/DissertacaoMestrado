@@ -27,7 +27,7 @@ Para criar a lista de abreviaturas seguindo o padrão em ordem alfabética e uti
 
 > ALT + SHIFT + F1
 
-Obs: Esse comando é válido no TexStudio.
+Obs: Esse comando é válido no [TexStudio](http://www.texstudio.org/).
 
 ### Via Terminal
 
