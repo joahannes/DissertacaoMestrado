@@ -12,15 +12,10 @@
 ## Requisitos:
 
 * TexLive Full (Linux)
+	> sudo apt-get install texlive-full
+
 * MikTex (Windows)
-
-#### Para Linux (Ubuntu):
-
-> sudo apt-get install texlive-full
-
-#### Para Windows:
-
-> [Link para MikTex](https://miktex.org/download)
+	> [Link para MikTex](https://miktex.org/download)
 
 ## Instalação:
 
