@@ -9,6 +9,19 @@
 * **Autor**: Joahannes Bruno Dias da Costa
 * **Ano**: 2018
 
+## Requisitos:
+
+* TexLive Full (Linux)
+* MikTex (Windows)
+
+#### Para Linux (Ubuntu):
+
+> sudo apt-get install texlive-full
+
+#### Para Windows:
+
+> [Link para MikTex](https://miktex.org/download)
+
 ## Instalação:
 
 > git clone https://github.com/joahannes/DissertacaoMestrado.git 
