@@ -11,11 +11,14 @@
 
 ## Requisitos:
 
-* TexLive Full (Linux)
+* TexLive Full (Linux):
 	> sudo apt-get install texlive-full
 
-* MikTex (Windows)
-	> [Link para MikTex](https://miktex.org/download)
+* MiKTex (Windows):
+	> [Link para MiKTex](https://miktex.org/download)
+
+* Editor LaTeX ou Bloco de Notas:
+	> [TeXstudio](http://www.texstudio.org/), [Texmaker](http://www.xm1math.net/texmaker/), [Kile](https://kile.sourceforge.io/), etc.
 
 ## Instalação:
 
@@ -35,7 +38,7 @@ Para criar a lista de abreviaturas seguindo o padrão em ordem alfabética e uti
 
 > ALT + SHIFT + F1
 
-Obs: Esse comando é válido no [TexStudio](http://www.texstudio.org/).
+Obs: Esse comando é válido no [TeXstudio](http://www.texstudio.org/).
 
 ### Via Terminal
 
