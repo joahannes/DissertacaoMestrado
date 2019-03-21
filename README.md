@@ -33,19 +33,19 @@ Obs: Esse comando é válido no [TexStudio](http://www.texstudio.org/).
 
 Para criar a lista de abreviaturas em ordem alfabética via terminal, basta executar o arquivo Makefile (que está dentro do diretório 1_principal/) usando os seguintes passos:
 
-Executar o make para criar os arquivos a partir do .tex:
+1. Executar o make para criar os arquivos a partir do .tex:
 
 > make
 
-Executar o make index para criar a lista de abreviaturas:
+2. Executar o make index para criar a lista de abreviaturas:
 
 > make index
 
-Executar o make clean para limpar os arquivos desnecessários criados anteriormente:
+3. Executar o make clean para limpar os arquivos desnecessários criados anteriormente:
 
 > make clean
 
-Executar novamente o make para aplicar finalmente a lista de abreviaturas no .tex:
+4. Executar novamente o make para aplicar finalmente a lista de abreviaturas no .tex:
 
 > make
 
