@@ -1,8 +1,11 @@
 # Dissertacao de Mestrado
 
-Template LaTeX utilizado para escrita da dissertação de mestrado requerida pelo Programa de Pós-Graduação em Ciência da Computação, da Universidade Federal do Pará, para obtenção do título de Mestre em Ciência da Computação. O template é genérido e pode ser utilizado tanto para Trabalhos de Conclusão de Curso (TCC) e Tese de Doutorado.
+Template LaTeX utilizado para escrita da dissertação de mestrado requerida pelo Programa de Pós-Graduação em Ciência da Computação, da Universidade Federal do Pará, para obtenção do título de Mestre em Ciência da Computação.
+
+O template é genérido e pode ser utilizado tanto para Trabalhos de Conclusão de Curso (TCC) e Tese de Doutorado.
 
 Informações sobre a dissertação:
+	
 	* **Instituição**: Universidade Federal do Pará
 	* **Instituto**: Instituto de Ciências Exatas e Naturais
 	* **Programa**: Programa de Pós-Graduação em Ciência da Computação
