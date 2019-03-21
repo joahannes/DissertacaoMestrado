@@ -11,6 +11,8 @@ Informações sobre a dissertação:
 * **Autor**: Joahannes Bruno Dias da Costa
 * **Ano**: 2018
 
+# Template LaTeX
+
 ## Requisitos:
 
 * TexLive Full (Linux):
