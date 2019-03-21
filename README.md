@@ -59,8 +59,8 @@ Feito. :)
 
 ## Autores:
 
-> [Denis Rosário](#)
+> [Denis Rosário](https://www.researchgate.net/profile/Denis_Rosario)
 
-> [André Riker](#)
+> [André Riker](https://www.researchgate.net/profile/Andre_Riker)
 
 > [Joahannes Costa](http://www.lrc.ic.unicamp.br/~joahannes)
