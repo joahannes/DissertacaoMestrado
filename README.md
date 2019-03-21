@@ -35,19 +35,19 @@ Para criar a lista de abreviaturas em ordem alfabética via terminal, basta exec
 
 1. Executar o make para criar os arquivos a partir do .tex:
 
-> make
+	> make
 
 2. Executar o make index para criar a lista de abreviaturas:
 
-> make index
+	> make index
 
 3. Executar o make clean para limpar os arquivos desnecessários criados anteriormente:
 
-> make clean
+	> make clean
 
 4. Executar novamente o make para aplicar finalmente a lista de abreviaturas no .tex:
 
-> make
+	> make
 
 Obs:
 
